@@ -1,6 +1,7 @@
 #ifndef OBSERVER_H
 #define OBSERVER_H
-#include "agent.h"
+#include "action.h"
+
 
 class Observer
 {
@@ -11,7 +12,7 @@ public:
     ~Observer();
     Agent *getAgent();
 
-    virtual void update() = 0;
+    virtual void update(Action *) = 0;
 
 };
 
