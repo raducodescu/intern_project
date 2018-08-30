@@ -41,14 +41,16 @@ void Agent::threadMain()
 
         while(canProcessAnotherRequest() && GlobalTime::getInstance().getGlobalTime() - time_last_check < 1)
         {
-            if (airport_requests->size() == 0) {
+            if (airport_requests->size() == 0)
+            {
                 break;
             }
             std::unique_lock<std::mutex> lock(requests_mutex);
 
             auto req = airport_requests->top();
 
-            if (req->getRequestTime() > actual_time) {
+            if (req->getRequestTime() > actual_time)
+            {
                 lock.unlock();
                 break;
             }

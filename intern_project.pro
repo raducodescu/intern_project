@@ -30,7 +30,10 @@ SOURCES += \
     takeoffrequest.cpp \
     track.cpp \
     utils.cpp \
-    dummyconsumer.cpp
+    dummyconsumer.cpp \
+    observer.cpp \
+    logobserver.cpp \
+    action.cpp
 
 RESOURCES += qml.qrc
 
@@ -60,7 +63,10 @@ HEADERS += \
     takeoffrequest.h \
     track.h \
     utils.h \
-    dummyconsumer.h
+    dummyconsumer.h \
+    observer.h \
+    logobserver.h \
+    action.h
 
 DISTFILES += \
     input_conf \
