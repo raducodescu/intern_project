@@ -1,0 +1,163 @@
+#include "agent.h"
+
+void Agent::threadMain()
+{
+    while (running) {
+        unsigned int actual_time = GlobalTime::getInstance().getGlobalTime();
+        if (actual_time - time_last_check == 0)
+            continue;
+        time_last_check = actual_time;
+        foreach (auto request, agent_requests)
+        {
+            foreach(auto track, *tracks)
+            {
+                if(track->isRequestProcessNow(request))
+                {
+                    std::cout << "Procss time este " << request->getProcessTime() << " time on track este " << request->getPlaneInfo().getTimeOnTrack() << " iar actual este " << actual_time << std::endl;
+                    if (request->getProcessTime() + request->getPlaneInfo().getTimeOnTrack() == actual_time)
+                    {
+                        track->removeTopRequest();
+                        std::cout << "Finish request " << std::endl << *request << std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "Requestul inca se proceseaza" << std::endl;
+                    }
+                    break;
+                }
+            }
+
+        }
+
+
+
+        while(canProcessAnotherRequest() && GlobalTime::getInstance().getGlobalTime() - time_last_check)
+        {
+            if (airport_requests->size() == 0)
+                break;
+            std::unique_lock<std::mutex> lock(requests_mutex);
+            auto req = airport_requests->at(0);
+            if (req->getProcessTime() > actual_time)
+            {
+                lock.unlock();
+                break;
+            }
+            airport_requests->erase(airport_requests->begin());
+            lock.unlock();
+
+        }
+
+
+
+        if (this->canProcessAnotherRequest())
+        {
+            std::unique_lock<std::mutex> lock(requests_mutex);
+
+            auto iterator = std::begin(*airport_requests);
+            while(iterator != std::end(*airport_requests))
+            {
+                auto request = *iterator;
+                unsigned int requestTime = request->getRequestTime();
+                std::shared_ptr<Track> trackToPut = nullptr;;
+                foreach(auto track, *tracks) {
+                    if (track->acceptRequest(request->getPlaneInfo()) && track->getTimeWhenFree() >= requestTime)
+                    {
+                        if (trackToPut == nullptr)
+                        {
+                            trackToPut = track;
+                        } else
+                        {
+                            trackToPut = trackToPut->getTimeWhenFree() < track->getTimeWhenFree() ? trackToPut : track;
+                        }
+                    }
+                }
+                if (trackToPut == nullptr)
+                {
+                    std::cout << "Nu am gasit pista buna la timpul " << actual_time << std::endl;
+                    ++iterator;
+
+                } else {
+                    std::cout << "Am gasit pista " << trackToPut->getId() << " la timpul " << actual_time << std::endl;
+                    trackToPut->addRequest(request);
+                    agent_requests.push_back(request);
+                    airport_requests->erase(iterator);
+                }
+            }
+            lock.unlock();
+            //std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+
+    }
+
+}
+
+void Agent::destroyThread()
+{
+    if (thread->joinable()) {
+        thread->join();
+        std::cout << "Thread with id " << thread->get_id() << " has stopped" << std::endl;
+    }
+}
+
+void Agent::stopThread()
+{
+    running = false;
+    destroyThread();
+}
+
+bool Agent::canProcessAnotherRequest()
+{
+    return agent_requests.size() < capacity;
+}
+
+bool Agent::isWorking()
+{
+    return agent_requests.size() > 0;
+}
+
+Agent::Agent(int id, unsigned int capacity, const std::string &name, std::mutex &m,
+             std::vector<std::shared_ptr<ARequest>> *airport_requests, std::vector<std::shared_ptr<Track>> *tracks) :
+    id(id), capacity(capacity), name(name), airport_requests(airport_requests), tracks(tracks), requests_mutex(m)
+{
+    running = false;
+    time_last_check = 0;
+}
+
+unsigned int Agent::getCapacity() const
+{
+    return capacity;
+}
+
+void Agent::setCapacity(unsigned int capacity)
+{
+    this->capacity = capacity;
+}
+
+std::string Agent::getName() const
+{
+    return name;
+}
+
+int Agent::getId() const
+{
+    return id;
+}
+
+void Agent::startThread()
+{
+    running = true;
+    thread = std::unique_ptr<std::thread>(new std::thread(&Agent::threadMain, this));
+    std::cout << "Thread with id " << thread->get_id() << " has started" << std::endl;
+}
+
+QDebug operator<<(QDebug debug, const Agent &agent)
+{
+    debug << "Agent[" << agent.getId() << "]---Name[" << agent.getName().c_str() << "]---Capacity[" << agent.getCapacity() << "]" << endl;
+    return debug;
+}
+
+std::ostream& operator<<(std::ostream& ost, const Agent &agent)
+{
+    ost << "Agent[" << agent.getId() << "]--Name[" << agent.getName() << "]--Capacity[" << agent.getCapacity() << "]" << std::endl;
+    return ost;
+}
