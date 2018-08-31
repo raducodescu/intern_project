@@ -1,4 +1,6 @@
-#include <utils.h>
+#include "./utils.h"
+#include <memory>
+#include <string>
 
 std::shared_ptr<QJsonObject> readJson(const std::string &filename)
 {
@@ -11,18 +13,18 @@ std::shared_ptr<QJsonObject> readJson(const std::string &filename)
     file.close();
     QJsonDocument doc = QJsonDocument::fromJson(value.toUtf8());
     auto jsonObj = std::make_shared<QJsonObject>(doc.object());
-
     return jsonObj;
 }
 
 GlobalTime::GlobalTime()
 {
-    future = std::async(std::launch::async,&GlobalTime::increment_function, this);
+    future = std::async(std::launch::async,
+                        &GlobalTime::increment_function, this);
 }
 
 void GlobalTime::increment_function()
 {
-    while(true) {
+    while (true) {
         this->global_time++;
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }

@@ -1,8 +1,8 @@
-#include "dummyconsumer.h"
+#include "./dummyconsumer.h"
+#include <memory>
 
 DummyConsumer::DummyConsumer()
 {
-
 }
 
 void DummyConsumer::accept(const std::shared_ptr<ARequest> &request)

@@ -1,4 +1,4 @@
-#include "planerequest.h"
+#include "./planerequest.h"
 
 int PlaneRequest::getId() const
 {
@@ -21,12 +21,13 @@ unsigned int PlaneRequest::getRequestTime() const
 }
 
 
-PlaneRequest::PlaneRequest(unsigned int creationTime, int id, APlane *plane, unsigned int time, bool urgent, RequestType type): ARequest(creationTime, type), id(id), plane(plane), requestTime(time), urgent(urgent)
+PlaneRequest::PlaneRequest(unsigned int creationTime, int id, APlane *plane,
+                           unsigned int time, bool urgent, RequestType type) :
+        ARequest(creationTime, type), id(id), plane(plane),
+        requestTime(time), urgent(urgent)
 {
-
 }
 
 PlaneRequest::~PlaneRequest()
 {
-
 }

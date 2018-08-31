@@ -1,4 +1,6 @@
-#include "track.h"
+#include "./track.h"
+#include <memory>
+#include <string>
 
 int Track::getId() const
 {
@@ -7,8 +9,7 @@ int Track::getId() const
 
 unsigned int Track::getTimeWhenFree()
 {
-    if (requests_queue.size() == 0)
-    {
+    if (requests_queue.size() == 0) {
         return GlobalTime::getInstance().getGlobalTime();
     }
     else
@@ -24,7 +25,8 @@ bool Track::isFree()
 
 bool Track::isRequestAcceptable(const APlane &plane)
 {
-    switch(size) {
+    switch (size)
+    {
     case TrackSize::LARGE:
         if (plane.getType() == PlaneType::MILITARY)
             return true;
@@ -52,7 +54,6 @@ bool Track::isRequestAcceptable(const APlane &plane)
             return false;
     }
     return false;
-
 }
 
 bool Track::isRequestProcessNow(std::shared_ptr<ARequest> &req) const
@@ -69,18 +70,15 @@ void Track::removeTopRequest()
 
 void Track::addRequest(std::shared_ptr<ARequest> &request)
 {
-    std::cout << "Am adaugat la track cu id = " << id << " request: " << std::endl << *request << std::endl;
     auto actual_time = GlobalTime::getInstance().getGlobalTime();
     auto track_time = requests_queue.size() == 0 ? actual_time : time_when_free;
     request->setProcessTime(track_time);
     time_when_free = track_time + request->getPlaneInfo().getTimeOnTrack();
     requests_queue.push(request);
-
 }
 
 Track::Track(int id, TrackSize size, TrackType type) : id(id), size(size), type(type), time_when_free(0)
 {
-
 }
 
 TrackType Track::getType() const
@@ -90,10 +88,13 @@ TrackType Track::getType() const
 
 TrackType Track::getTypeFromString(const std::string &string)
 {
-    if (string.compare("all") == 0) {
+    if (string.compare("all") == 0)
+
+    {
         return TrackType::ALL;
     }
-    else if (string.compare("private") == 0){
+    else if (string.compare("private") == 0)
+    {
         return TrackType::PRIVATE;
     }
     throw std::invalid_argument("Type needs to be either all or private");
@@ -101,13 +102,16 @@ TrackType Track::getTypeFromString(const std::string &string)
 
 TrackSize Track::getSizeFromString(const std::string &string)
 {
-    if (string.compare("small") == 0) {
+    if (string.compare("small") == 0)
+    {
         return TrackSize::SMALL;
     }
-    else if (string.compare("medium") == 0) {
+    else if (string.compare("medium") == 0)
+    {
         return TrackSize::MEDIUM;
     }
-    else if (string.compare("large") == 0) {
+    else if (string.compare("large") == 0)
+    {
         return TrackSize::LARGE;
     }
     throw std::invalid_argument("Size needs to be small, medium or large");
@@ -164,4 +168,3 @@ std::ostream &operator<<(std::ostream &ost, TrackSize size)
     ost << str;
     return ost;
 }
-

@@ -1,29 +1,51 @@
 #include "agent.h"
 
+void Agent::notify(std::shared_ptr<Action> action)
+{
+    observer->update(GlobalTime::getInstance().getGlobalTime(), action);
+}
+
+std::shared_ptr<Track> Agent::getBestTrack(std::shared_ptr<ARequest> req)
+{
+    std::shared_ptr<Track> track_to_put = nullptr;
+    unsigned int requestTime = req->getRequestTime();
+    foreach (auto track, *tracks) {
+        if (track->isRequestAcceptable(req->getPlaneInfo()) && track->getTimeWhenFree() >= requestTime && req->checkFuel(track->getTimeWhenFree())) {
+            if (track_to_put == nullptr) {
+                track_to_put = track;
+            } else {
+                track_to_put = track_to_put->getTimeWhenFree() < track->getTimeWhenFree() ? track_to_put : track;
+            }
+        }
+    }
+    return track_to_put;
+}
+
 void Agent::processLocalRequests(unsigned int actual_time)
 {
     for (auto riteraor = agent_requests.begin(); riteraor != agent_requests.end();)
     {
         auto request = *riteraor;
-        foreach(auto track, *tracks)
+        bool processed = false;
+        foreach (auto track, *tracks)
         {
-            if(track->isRequestProcessNow(request))
+            if (track->isRequestProcessNow(request))
             {
-                if (request->getProcessTime() + request->getPlaneInfo().getTimeOnTrack() == actual_time)
-                {
+                if (request->getProcessTime() + request->getPlaneInfo().getTimeOnTrack() == actual_time) {
+                    processed = true;
                     track->removeTopRequest();
                     std::unique_lock<std::mutex> lock(finish_requests_mutex);
                     finish_requests->push_back(request);
                     lock.unlock();
                     agent_requests.erase(riteraor);
-                    std::cout << "Finish at time " << actual_time << " request: " << std::endl << *request << std::endl;
-                }
-                else
-                {
-                    riteraor++;
+                    ActionType type = request->getType() == RequestType::LANDING ? ActionType::LANDING : ActionType::TAKEOFF;
+                    std::shared_ptr<Action> action = std::make_shared<Action>(type, request, id, track->getId());
+                    notify(action);
                 }
             }
         }
+        if (!processed)
+            riteraor++;
     }
 }
 
@@ -36,58 +58,39 @@ void Agent::threadMain()
             continue;
 
         time_last_check = actual_time;
-
         processLocalRequests(actual_time);
 
-        while(canProcessAnotherRequest() && GlobalTime::getInstance().getGlobalTime() - time_last_check < 1)
+        while (canProcessAnotherRequest() && GlobalTime::getInstance().getGlobalTime() - time_last_check < 1)
         {
+            std::unique_lock<std::mutex> lock(requests_mutex);
             if (airport_requests->size() == 0)
             {
                 break;
             }
-            std::unique_lock<std::mutex> lock(requests_mutex);
-
             auto req = airport_requests->top();
-
             if (req->getRequestTime() > actual_time)
             {
                 lock.unlock();
                 break;
             }
-
             airport_requests->pop();
+            std::shared_ptr<Track> trackToPut = getBestTrack(req);
             lock.unlock();
-
-            if (!req->checkFuel())
+            if (trackToPut == nullptr)
             {
-                std::cout << "Plane out of fuel! Failed" << std::endl;
-                std::unique_lock<std::mutex> flock(failed_requests_mutex);
+                std::unique_lock<std::mutex> failed_lock(failed_requests_mutex);
                 failed_requests->push_back(req);
-                flock.unlock();
-                continue;
-            }
+                failed_lock.unlock();
 
-            std::shared_ptr<Track> trackToPut = nullptr;
-            unsigned int requestTime = req->getRequestTime();
-            foreach(auto track, *tracks) {
-                if (track->isRequestAcceptable(req->getPlaneInfo()) && track->getTimeWhenFree() >= requestTime)
-                {
-                    if (trackToPut == nullptr)
-                    {
-                        trackToPut = track;
-                    } else
-                    {
-                        trackToPut = trackToPut->getTimeWhenFree() < track->getTimeWhenFree() ? trackToPut : track;
-                    }
-                }
+                std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::FAILED, req, id, 0);
+                notify(action);
             }
-            if (trackToPut == nullptr) {
-                std::cout << "Something wrong happend" << std::endl;
-                break;
-            }
-            else {
+            else
+            {
                 trackToPut->addRequest(req);
                 agent_requests.push_back(req);
+                std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::RECEIVE, req, id, trackToPut->getId());
+                notify(action);
             }
         }
     }
@@ -95,7 +98,8 @@ void Agent::threadMain()
 
 void Agent::destroyThread()
 {
-    if (thread->joinable()) {
+    if (thread->joinable())
+    {
         thread->join();
         std::cout << "Thread with id " << thread->get_id() << " has stopped" << std::endl;
     }
@@ -112,8 +116,7 @@ bool Agent::canProcessAnotherRequest()
     return agent_requests.size() < capacity;
 }
 
-bool Agent::isWorking()
-{
+bool Agent::isWorking() {
     return agent_requests.size() > 0;
 }
 
@@ -121,11 +124,9 @@ Agent::Agent(int id, unsigned int capacity, const std::string &name, std::mutex 
              std::priority_queue<std::shared_ptr<ARequest>, std::vector<std::shared_ptr<ARequest>>, DereferenceCompareARequest> *airport_requests,
              std::mutex &finish_requests_mutex, std::vector<std::shared_ptr<ARequest>> *finish_requests,
              std::mutex &failed_requests_mutex, std::vector<std::shared_ptr<ARequest>> *failed_requests,
-             std::vector<std::shared_ptr<Track>> *tracks) :
-    id(id), capacity(capacity), name(name), airport_requests(airport_requests), tracks(tracks), finish_requests(finish_requests), failed_requests(failed_requests),
-    requests_mutex(requests_mutex), finish_requests_mutex(finish_requests_mutex), failed_requests_mutex(failed_requests_mutex)
-
-{
+             std::vector<std::shared_ptr<Track>> *tracks, Observer *observer) :
+            id(id), capacity(capacity), name(name), airport_requests(airport_requests), tracks(tracks), finish_requests(finish_requests), failed_requests(failed_requests),
+            requests_mutex(requests_mutex), finish_requests_mutex(finish_requests_mutex), failed_requests_mutex(failed_requests_mutex), observer(observer) {
     running = false;
     time_last_check = 0;
 }
@@ -154,7 +155,6 @@ void Agent::startThread()
 {
     running = true;
     thread = std::unique_ptr<std::thread>(new std::thread(&Agent::threadMain, this));
-    std::cout << "Thread with id " << thread->get_id() << " has started" << std::endl;
 }
 
 QDebug operator<<(QDebug debug, const Agent &agent)

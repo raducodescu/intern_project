@@ -1,0 +1,20 @@
+{
+        "static-data": {
+                "SMALLTIME": 3,
+                "MEDIUMTIME": 5,
+                "LARGETIME": 8
+        },
+        "control": [
+                { "id" : 1, "name" : "John", "capacity" : 2},
+                { "id" : 2, "name" : "Mark", "capacity" : 4},
+                { "id" : 3, "name" : "Mark", "capacity" : 4},
+                { "id" : 4, "name" : "Mark", "capacity" : 4}
+        ],
+        "tracks": [
+                { "id" : 1, "size": "large", "type" : "all"},
+                { "id" : 2, "size": "large", "type" : "all"},
+                { "id" : 3, "size": "large", "type" : "private" },
+                { "id" : 4, "size": "small", "type" : "private"}
+        ]
+
+}

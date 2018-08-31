@@ -31,9 +31,9 @@ SOURCES += \
     track.cpp \
     utils.cpp \
     dummyconsumer.cpp \
+    action.cpp \
     observer.cpp \
-    logobserver.cpp \
-    action.cpp
+    logobserver.cpp
 
 RESOURCES += qml.qrc
 
@@ -64,9 +64,9 @@ HEADERS += \
     track.h \
     utils.h \
     dummyconsumer.h \
+    action.h \
     observer.h \
-    logobserver.h \
-    action.h
+    logobserver.h
 
 DISTFILES += \
     input_conf \

@@ -1,5 +1,5 @@
-#ifndef TRACK_H
-#define TRACK_H
+#ifndef INTERN_PROJECT_TRACK_H_
+#define INTERN_PROJECT_TRACK_H_
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -9,11 +9,14 @@
 #include "arequest.h"
 #include "utils.h"
 
-enum class TrackType {
+
+enum class TrackType
+{
     ALL, PRIVATE
 };
 
-enum class TrackSize {
+enum class TrackSize
+{
     SMALL, MEDIUM, LARGE
 };
 
@@ -22,13 +25,13 @@ std::ostream& operator<<(std::ostream &, TrackSize);
 
 class Track
 {
-private:
+ private:
     const int id;
     const TrackSize size;
     TrackType type;
     std::queue<std::shared_ptr<ARequest> > requests_queue;
     unsigned int time_when_free;
-public:
+ public:
     Track(int id, TrackSize size, TrackType type);
     TrackSize getSize() const;
     TrackType getType() const;
@@ -46,4 +49,4 @@ public:
     friend QDebug operator<<(QDebug, const Track&);
 };
 
-#endif // TRACK_H
+#endif  // INTERN_PROJECT_TRACK_H_

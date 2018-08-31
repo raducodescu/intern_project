@@ -1,8 +1,9 @@
-#include "filegenerator.h"
+#include "./filegenerator.h"
+#include <memory>
+#include <string>
 
 FileGenerator::FileGenerator()
 {
-
 }
 
 APlane* FileGenerator::createPlaneFromQJsonObject(QJsonObject obj)
@@ -21,7 +22,7 @@ APlane* FileGenerator::createPlaneFromQJsonObject(QJsonObject obj)
     double d_consumption = obj.value("consumption").toDouble();
     if (std::modf(d_consumption, &d_consumption) != 0 || d_consumption < 0)
         throw std::invalid_argument("Request consumption is invalid");
-    int consumption = static_cast<int>(d_consumption);
+    unsigned int consumption = static_cast<unsigned int>(d_consumption);
 
     std::string type = obj.value("type").toString().toStdString();
     std::string size = obj.value("size").toString().toStdString();
@@ -39,7 +40,8 @@ void FileGenerator::generateRequests(std::string filename)
         throw std::invalid_argument("Requests needs to be an array");
 
     QJsonArray requestsArray = requestsValue.toArray();
-    foreach (const QJsonValue &value, requestsArray) {
+    foreach(const QJsonValue &value, requestsArray)
+    {
         QJsonObject obj = value.toObject();
         if (!obj.contains("id"))
             throw std::invalid_argument("Request id is invalid");
@@ -81,7 +83,9 @@ void FileGenerator::generateRequests(std::string filename)
         unsigned int creationTime = GlobalTime::getInstance().getGlobalTime();
         if (requestType == RequestType::TAKEOFF) {
             request = std::make_unique<TakeOffRequest>(0, id, plane, time, urgent, RequestType::TAKEOFF);
-        } else {
+        }
+        else
+        {
             if (!obj.value("fuel").isDouble())
                 throw std::invalid_argument("Request fuel is invalid");
             double d_fuel = obj.value("fuel").toDouble();
@@ -90,11 +94,10 @@ void FileGenerator::generateRequests(std::string filename)
             int fuel = static_cast<int>(d_fuel);
             request = std::make_shared<LandingRequest>(creationTime, id, plane, time, urgent, fuel, RequestType::LANDING);
         }
-        foreach (auto consumer, requestConsumers) {
+        foreach (auto consumer, requestConsumers)
+        {
             consumer->accept(request);
         }
-        requests.push_back(std::move(request));
+        requests.push_back(request);
     }
-
 }
-

@@ -1,24 +1,23 @@
-#ifndef LANDINGREQUEST_H
-#define LANDINGREQUEST_H
+#ifndef INTERN_PROJECT_LANDINGREQUEST_H_
+#define INTERN_PROJECT_LANDINGREQUEST_H_
 #include "planerequest.h"
 #include "utils.h"
 
 class LandingRequest : public PlaneRequest
 {
-private:
+ private:
     unsigned int fuel;
-public:
-    LandingRequest(unsigned int creation_time, int id, APlane *plane, unsigned int requestTime, bool urgent, unsigned int fuel, RequestType type);
+    void dump_request(std::ostream &ost) const override;
+ public:
+    LandingRequest(unsigned int creation_time, int id, APlane *plane,
+                   unsigned int requestTime, bool urgent, unsigned int fuel,
+                   RequestType type);
     // PlaneRequest interface
     unsigned int getFuel() const;
     void setFuel(unsigned int value);
 
-private:
-    void dump_request(std::ostream &ost) const override;
-
     // ARequest interface
-public:
-    bool checkFuel() const override;
+    bool checkFuel(unsigned int) const override;
 };
 
-#endif // LANDINGREQUEST_H
+#endif  // INTERN_PROJECT_LANDINGREQUEST_H_

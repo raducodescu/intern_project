@@ -1,14 +1,12 @@
-#include "aplane.h"
+#include "./aplane.h"
 #include <iostream>
 
 APlane::APlane()
 {
-
 }
 
 APlane::~APlane()
 {
-
 }
 
 std::ostream &operator<<(std::ostream &ost, const APlane &plane)
@@ -19,13 +17,14 @@ std::ostream &operator<<(std::ostream &ost, const APlane &plane)
 
 PlaneSize APlane::GetSizeFromString(const std::string &string)
 {
-    if (string.compare("small") == 0) {
+    if (string.compare("small") == 0)
+    {
         return PlaneSize::SMALL;
-    }
-    else if (string.compare("medium") == 0) {
+    } else if (string.compare("medium") == 0)
+    {
         return PlaneSize::MEDIUM;
-    }
-    else if (string.compare("large") == 0) {
+    } else if (string.compare("large") == 0)
+    {
         return PlaneSize::LARGE;
     }
     throw std::invalid_argument("Size needs to be small, medium or large");
@@ -33,10 +32,11 @@ PlaneSize APlane::GetSizeFromString(const std::string &string)
 
 PlaneType APlane::GetTypeFromString(const std::string &string)
 {
-    if (string.compare("military") == 0) {
+    if (string.compare("military") == 0)
+    {
         return PlaneType::MILITARY;
-    }
-    else if (string.compare("commercial") == 0) {
+    } else if (string.compare("commercial") == 0)
+    {
         return PlaneType::COMMERCIAL;
     }
     throw std::invalid_argument("Size needs to be small, medium or large");

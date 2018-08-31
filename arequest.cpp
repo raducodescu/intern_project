@@ -1,4 +1,5 @@
-#include "arequest.h"
+#include "./arequest.h"
+#include <string>
 
 RequestType ARequest::getType() const
 {
@@ -7,10 +8,11 @@ RequestType ARequest::getType() const
 
 RequestType ARequest::GetTypeFromString(const std::string &str)
 {
-    if (str.compare("in")) {
+    if (str.compare("in"))
+    {
         return RequestType::LANDING;
-    }
-    else if (str.compare("out")) {
+    } else if (str.compare("out"))
+    {
             return RequestType::TAKEOFF;
     }
     throw std::invalid_argument("Direction should be \"in\" for landing or \"out\" for take-off");
@@ -28,7 +30,6 @@ void ARequest::setProcessTime(unsigned int value)
 
 ARequest::ARequest(unsigned int creationTime, RequestType type) : creationTime(creationTime), type(type)
 {
-
 }
 
 unsigned int ARequest::getCreationTime() const
@@ -38,7 +39,6 @@ unsigned int ARequest::getCreationTime() const
 
 ARequest::~ARequest()
 {
-
 }
 
 std::ostream &operator<<(std::ostream &ost, const ARequest &request)

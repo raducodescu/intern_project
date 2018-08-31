@@ -1,15 +1,17 @@
 #ifndef LOGOBSERVER_H
 #define LOGOBSERVER_H
+#include <iostream>
+#include <iomanip>
+#include <mutex>
 #include "observer.h"
 
 class LogObserver : public Observer
 {
 public:
-    LogObserver(Agent *);
-
+    LogObserver();
     // Observer interface
 public:
-    void update() override;
+    void update(unsigned int, std::shared_ptr<Action>) override;
 };
 
 #endif // LOGOBSERVER_H

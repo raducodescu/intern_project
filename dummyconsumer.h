@@ -1,16 +1,17 @@
-#ifndef DUMMYCONSUMER_H
-#define DUMMYCONSUMER_H
+#ifndef INTERN_PROJECT_DUMMYCONSUMER_H_
+#define INTERN_PROJECT_DUMMYCONSUMER_H_
+#include <memory>
 #include <iostream>
 #include "requestconsumer.h"
 
+
 class DummyConsumer : public RequestConsumer
 {
-public:
+ public:
     DummyConsumer();
 
     // RequestConsumer interface
-public:
     void accept(const std::shared_ptr<ARequest> &request) override;
 };
 
-#endif // DUMMYCONSUMER_H
+#endif  // INTERN_PROJECT_DUMMYCONSUMER_H_

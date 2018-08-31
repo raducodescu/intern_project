@@ -1,22 +1,18 @@
-#ifndef PLANE_H
-#define PLANE_H
+#ifndef INTERN_PROJECT_REGULARPLANE_H_
+#define INTERN_PROJECT_REGULARPLANE_H_
 #include <iostream>
 #include "aplane.h"
 
-
-
 class RegularPlane : public APlane
 {
-private:
+ private:
     unsigned int consumption;
     const PlaneType type;
     const PlaneSize size;
     unsigned int timeOnTrack;
-public:
+ public:
     RegularPlane(unsigned int consumption, PlaneType type, PlaneSize size);
-
     // APlane interface
-public:
     void dump_plane() const override;
     unsigned int getConsumption() const override;
     PlaneType getType() const override;
@@ -25,4 +21,4 @@ public:
     void setTimeOnTrack(unsigned int value) override;
 };
 
-#endif // PLANE_H
+#endif  // INTERN_PROJECT_REGULARPLANE_H_

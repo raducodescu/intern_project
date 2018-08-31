@@ -1,4 +1,4 @@
-﻿#include "regularplane.h"
+﻿#include "./regularplane.h"
 
 unsigned int RegularPlane::getTimeOnTrack() const
 {
@@ -13,7 +13,6 @@ void RegularPlane::setTimeOnTrack(unsigned int value)
 RegularPlane::RegularPlane(unsigned int consumption, PlaneType type, PlaneSize size) :
     consumption(consumption), type(type), size(size)
 {
-    
 }
 
 

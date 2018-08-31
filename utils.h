@@ -1,6 +1,6 @@
-#ifndef UTILS_H
-#define UTILS_H
-#include "string"
+#ifndef INTERN_PROJECT_UTILS_H_
+#define INTERN_PROJECT_UTILS_H_
+#include <string>
 #include <iostream>
 #include <QFile>
 #include <QString>
@@ -9,6 +9,7 @@
 #include "QJsonObject"
 #include <memory>
 #include <future>
+#include "action.h"
 
 struct AirportPlaneTimes
 {
@@ -19,17 +20,16 @@ struct AirportPlaneTimes
 
 class GlobalTime
 {
-private:
+ private:
     unsigned int global_time;
     std::future<void> future;
     GlobalTime();
     void increment_function();
-public:
+ public:
     unsigned int getGlobalTime() const;
     static GlobalTime& getInstance();
 };
 
-
 std::shared_ptr<QJsonObject> readJson(const std::string &filename);
 
-#endif // UTILS_H
+#endif  // INTERN_PROJECT_UTILS_H_

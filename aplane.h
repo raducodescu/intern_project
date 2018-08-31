@@ -1,12 +1,15 @@
-#ifndef APLANE_H
-#define APLANE_H
+#ifndef INTERN_PROJECT_APLANE_H_
+#define INTERN_PROJECT_APLANE_H_
 #include <ostream>
+#include <string>
 
-enum class PlaneType {
+enum class PlaneType
+{
     COMMERCIAL, MILITARY
 };
 
-enum class PlaneSize {
+enum class PlaneSize
+{
     SMALL, MEDIUM, LARGE
 };
 
@@ -15,7 +18,7 @@ std::ostream& operator<<(std::ostream &, PlaneType);
 
 class APlane
 {
-public:
+ public:
     APlane();
     virtual ~APlane();
 
@@ -32,4 +35,4 @@ public:
     friend std::ostream& operator<<(std::ostream &, const APlane&);
 };
 
-#endif // APLANE_H
+#endif  // INTERN_PROJECT_APLANE_H_

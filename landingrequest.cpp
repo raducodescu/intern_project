@@ -1,4 +1,4 @@
-#include "landingrequest.h"
+#include "./landingrequest.h"
 
 unsigned int LandingRequest::getFuel() const
 {
@@ -10,9 +10,10 @@ void LandingRequest::setFuel(unsigned int value)
     fuel = value;
 }
 
-LandingRequest::LandingRequest(unsigned int creationTime, int id, APlane *plane, unsigned int time, bool urgent, unsigned int fuel, RequestType type) : PlaneRequest(creationTime, id, plane, time, urgent,type), fuel(fuel)
+LandingRequest::LandingRequest(unsigned int creationTime, int id, APlane *plane, unsigned int time,
+                               bool urgent, unsigned int fuel, RequestType type) :
+        PlaneRequest(creationTime, id, plane, time, urgent, type), fuel(fuel)
 {
-
 }
 
 void LandingRequest::dump_request(std::ostream &ost) const
@@ -21,15 +22,12 @@ void LandingRequest::dump_request(std::ostream &ost) const
     ost << "\tWith plane: " << getPlaneInfo() << std::endl;
 }
 
-bool LandingRequest::checkFuel() const
+bool LandingRequest::checkFuel(unsigned int time) const
 {
     unsigned int request_time = getRequestTime();
     unsigned int fuel = getFuel();
     unsigned int consumption = getPlaneInfo().getConsumption();
-    unsigned int actual_time = GlobalTime::getInstance().getGlobalTime();
-
-    return fuel - consumption * (actual_time - request_time) > 0;
-
+    return fuel > consumption * (time - request_time) > 0;
 }
 
 

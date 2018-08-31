@@ -21,13 +21,12 @@ int main(int argc, char *argv[])
 
     GlobalTime::getInstance();
 
-    Airport a("/home/radu/intern_project/input_conf");
+    Airport a("/home/radu/intern_project/conf2");
     DummyConsumer dummy;
     FileGenerator fg;
     fg.registerConsumer(&a);
-    fg.registerConsumer(&dummy);
+    //fg.registerConsumer(&dummy);
 
-    fg.generateRequests("/home/radu/intern_project/requests");
-
+    fg.generateRequests("/home/radu/intern_project/test2");
     return app.exec();
 }
