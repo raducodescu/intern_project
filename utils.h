@@ -6,10 +6,17 @@
 #include <QString>
 #include <QDebug>
 #include <QJsonDocument>
+#include <queue>
 #include "QJsonObject"
 #include <memory>
 #include <future>
 #include "action.h"
+#include "observer.h"
+
+using ARequestPList = std::vector<std::shared_ptr<ARequest>>;
+using ObserverPList = std::vector<std::shared_ptr<Observer>>;
+using ARequestPriorityQueue = std::priority_queue<std::shared_ptr<ARequest>,
+    std::vector<std::shared_ptr<ARequest>>, DereferenceCompareARequest>;
 
 struct AirportPlaneTimes
 {

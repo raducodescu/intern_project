@@ -28,5 +28,8 @@ int main(int argc, char *argv[])
     //fg.registerConsumer(&dummy);
 
     fg.generateRequests("/home/radu/intern_project/test2");
+    std::this_thread::sleep_for(std::chrono::seconds(20));
+    a.stop();
+    return 0;
     return app.exec();
 }

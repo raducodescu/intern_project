@@ -20,10 +20,12 @@ PlaneSize APlane::GetSizeFromString(const std::string &string)
     if (string.compare("small") == 0)
     {
         return PlaneSize::SMALL;
-    } else if (string.compare("medium") == 0)
+    }
+    else if (string.compare("medium") == 0)
     {
         return PlaneSize::MEDIUM;
-    } else if (string.compare("large") == 0)
+    }
+    else if (string.compare("large") == 0)
     {
         return PlaneSize::LARGE;
     }

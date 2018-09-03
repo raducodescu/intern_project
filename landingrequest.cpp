@@ -27,7 +27,7 @@ bool LandingRequest::checkFuel(unsigned int time) const
     unsigned int request_time = getRequestTime();
     unsigned int fuel = getFuel();
     unsigned int consumption = getPlaneInfo().getConsumption();
-    return fuel > consumption * (time - request_time) > 0;
+    return fuel > consumption * (time - request_time);
 }
 
 

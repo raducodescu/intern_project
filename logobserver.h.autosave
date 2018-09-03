@@ -16,6 +16,7 @@ public:
     // Observer interface
 public:
     void update(unsigned int, std::shared_ptr<Action>) override;
+    void getResults();
 };
 
 #endif // LOGOBSERVER_H

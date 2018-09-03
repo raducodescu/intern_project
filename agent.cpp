@@ -2,7 +2,10 @@
 
 void Agent::notify(std::shared_ptr<Action> action)
 {
-    observer->update(GlobalTime::getInstance().getGlobalTime(), action);
+    foreach (std::shared_ptr<Observer> observer, *observers){
+        observer->update(GlobalTime::getInstance().getGlobalTime(), action);
+    }
+
 }
 
 std::shared_ptr<Track> Agent::getBestTrack(std::shared_ptr<ARequest> req)
@@ -34,9 +37,6 @@ void Agent::processLocalRequests(unsigned int actual_time)
                 if (request->getProcessTime() + request->getPlaneInfo().getTimeOnTrack() == actual_time) {
                     processed = true;
                     track->removeTopRequest();
-                    std::unique_lock<std::mutex> lock(finish_requests_mutex);
-                    finish_requests->push_back(request);
-                    lock.unlock();
                     agent_requests.erase(riteraor);
                     ActionType type = request->getType() == RequestType::LANDING ? ActionType::LANDING : ActionType::TAKEOFF;
                     std::shared_ptr<Action> action = std::make_shared<Action>(type, request, id, track->getId());
@@ -51,7 +51,7 @@ void Agent::processLocalRequests(unsigned int actual_time)
 
 void Agent::threadMain()
 {
-    while (running)
+    while (running || isWorking())
     {
         unsigned int actual_time = GlobalTime::getInstance().getGlobalTime();
         if (actual_time - time_last_check == 0)
@@ -78,10 +78,7 @@ void Agent::threadMain()
             lock.unlock();
             if (trackToPut == nullptr)
             {
-                std::unique_lock<std::mutex> failed_lock(failed_requests_mutex);
-                failed_requests->push_back(req);
-                failed_lock.unlock();
-
+                req->setProcessTime(actual_time);
                 std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::FAILED, req, id, 0);
                 notify(action);
             }
@@ -98,10 +95,14 @@ void Agent::threadMain()
 
 void Agent::destroyThread()
 {
+    while(isWorking())
+    {
+    }
+
     if (thread->joinable())
     {
-        thread->join();
         std::cout << "Thread with id " << thread->get_id() << " has stopped" << std::endl;
+        thread->join();
     }
 }
 
@@ -121,12 +122,10 @@ bool Agent::isWorking() {
 }
 
 Agent::Agent(int id, unsigned int capacity, const std::string &name, std::mutex &requests_mutex,
-             std::priority_queue<std::shared_ptr<ARequest>, std::vector<std::shared_ptr<ARequest>>, DereferenceCompareARequest> *airport_requests,
-             std::mutex &finish_requests_mutex, std::vector<std::shared_ptr<ARequest>> *finish_requests,
-             std::mutex &failed_requests_mutex, std::vector<std::shared_ptr<ARequest>> *failed_requests,
-             std::vector<std::shared_ptr<Track>> *tracks, Observer *observer) :
-            id(id), capacity(capacity), name(name), airport_requests(airport_requests), tracks(tracks), finish_requests(finish_requests), failed_requests(failed_requests),
-            requests_mutex(requests_mutex), finish_requests_mutex(finish_requests_mutex), failed_requests_mutex(failed_requests_mutex), observer(observer) {
+             ARequestPriorityQueue *airport_requests,
+             std::vector<std::shared_ptr<Track>> *tracks, ObserverPList *observers) :
+            id(id), capacity(capacity), name(name), airport_requests(airport_requests), tracks(tracks),
+            requests_mutex(requests_mutex),observers(observers) {
     running = false;
     time_last_check = 0;
 }

@@ -68,7 +68,7 @@ void Airport::initializeAgents(QJsonValue& controlValue)
             throw std::invalid_argument("Control agent capacity is invalid");
         unsigned int capacity = static_cast<unsigned int>(d_capacity);
         agents.push_back(std::make_shared<Agent>(id, capacity, name, requests_mutex, &requests,
-                            finish_requests_mutex, &finish_requests, failed_requests_mutex, &failed_requests, &tracks, observer));
+                            &tracks, &observers));
     }
 }
 
@@ -99,7 +99,7 @@ void Airport::initializeStaticData(QJsonValue& staticDataValue)
     }
 }
 
-Airport::Airport(const std::string &configure_file)
+Airport::Airport(const std::string &configure_file) : stopped(false)
 {
     auto conf_obj = readJson(configure_file);
 
@@ -116,12 +116,12 @@ Airport::Airport(const std::string &configure_file)
     if (!static_data_value.isObject())
         throw std::invalid_argument("Static field needs to be an object");
 
-    observer = new LogObserver();
+    observers.push_back(std::shared_ptr<Observer>(new LogObserver));
+
     initializeTracks(tracks_value);
     initializeAgents(agents_value);
     initializeStaticData(static_data_value);
 
-    qDebug() << "Finish constructing airport" << endl;
     foreach (auto a, agents)
     {
         a->startThread();
@@ -130,13 +130,13 @@ Airport::Airport(const std::string &configure_file)
     std::cout << *this << std::endl;
 }
 
-void Airport::getResults()
-{
-    qDebug() << "Get results " << endl;
-}
-
 void Airport::accept(const std::shared_ptr<ARequest> &request)
 {
+    if (stopped)
+    {
+        std::cout << "Airport is stopped" << std::endl;
+    }
+
     switch (request->getPlaneInfo().getSize())
     {
     case PlaneSize::SMALL:
@@ -159,6 +159,23 @@ void Airport::accept(const std::shared_ptr<ARequest> &request)
     std::unique_lock<std::mutex> lock(requests_mutex);
     requests.push(request);
     lock.unlock();
+}
+
+void Airport::stop()
+{
+    stopped = true;
+    bool wait = true;
+    while (wait)
+    {
+        wait = false;
+        foreach (auto agent, agents)
+            wait |= agent->isWorking();
+    }
+
+    foreach (auto agent, agents)
+    {
+        agent->stopThread();
+    }
 }
 
 Airport::~Airport()
