@@ -116,8 +116,6 @@ Airport::Airport(const std::string &configure_file) : stopped(false)
     if (!static_data_value.isObject())
         throw std::invalid_argument("Static field needs to be an object");
 
-    observers.push_back(std::shared_ptr<Observer>(new LogObserver));
-
     initializeTracks(tracks_value);
     initializeAgents(agents_value);
     initializeStaticData(static_data_value);
@@ -127,7 +125,6 @@ Airport::Airport(const std::string &configure_file) : stopped(false)
         a->startThread();
     }
 
-    std::cout << *this << std::endl;
 }
 
 void Airport::accept(const std::shared_ptr<ARequest> &request)
@@ -141,10 +138,13 @@ void Airport::accept(const std::shared_ptr<ARequest> &request)
     {
     case PlaneSize::SMALL:
         request->getPlaneInfo().setTimeOnTrack(airport_planes_times.small_plane_time);
+        break;
     case PlaneSize::MEDIUM:
         request->getPlaneInfo().setTimeOnTrack(airport_planes_times.medium_plane_time);
+        break;
     case PlaneSize::LARGE:
         request->getPlaneInfo().setTimeOnTrack(airport_planes_times.large_plane_time);
+        break;
     }
     bool is_request_good = false;
     foreach(auto track, tracks)
@@ -165,17 +165,24 @@ void Airport::stop()
 {
     stopped = true;
     bool wait = true;
-    while (wait)
+    while (requests.size() || wait)
     {
         wait = false;
-        foreach (auto agent, agents)
+        foreach (auto agent, agents) {
             wait |= agent->isWorking();
+        }
+
     }
 
     foreach (auto agent, agents)
     {
         agent->stopThread();
     }
+}
+
+void Airport::addObserver(std::shared_ptr<Observer> observer)
+{
+    observers.push_back(observer);
 }
 
 Airport::~Airport()

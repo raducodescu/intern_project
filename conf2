@@ -5,16 +5,16 @@
                 "LARGETIME": 8
         },
         "control": [
-                { "id" : 1, "name" : "John", "capacity" : 2},
-                { "id" : 2, "name" : "Mark", "capacity" : 4},
-                { "id" : 3, "name" : "Mark", "capacity" : 4},
-                { "id" : 4, "name" : "Mark", "capacity" : 4}
+                { "id" : 1, "name" : "John", "capacity" : 3},
+                { "id" : 2, "name" : "Mike", "capacity" : 3}
         ],
         "tracks": [
+                { "id" : 2, "size": "medium", "type" : "all"},
+                { "id" : 3, "size": "small", "type" : "all"},
                 { "id" : 1, "size": "large", "type" : "all"},
-                { "id" : 2, "size": "large", "type" : "all"},
-                { "id" : 3, "size": "large", "type" : "private" },
-                { "id" : 4, "size": "small", "type" : "private"}
+                { "id" : 4, "size": "large", "type" : "all"},
+                { "id" : 5, "size": "medium", "type" : "all"},
+                { "id" : 6, "size": "small", "type" : "all"}
         ]
 
 }

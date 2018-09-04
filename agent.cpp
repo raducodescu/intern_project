@@ -5,7 +5,6 @@ void Agent::notify(std::shared_ptr<Action> action)
     foreach (std::shared_ptr<Observer> observer, *observers){
         observer->update(GlobalTime::getInstance().getGlobalTime(), action);
     }
-
 }
 
 std::shared_ptr<Track> Agent::getBestTrack(std::shared_ptr<ARequest> req)
@@ -16,7 +15,9 @@ std::shared_ptr<Track> Agent::getBestTrack(std::shared_ptr<ARequest> req)
         if (track->isRequestAcceptable(req->getPlaneInfo()) && track->getTimeWhenFree() >= requestTime && req->checkFuel(track->getTimeWhenFree())) {
             if (track_to_put == nullptr) {
                 track_to_put = track;
-            } else {
+            }
+            else
+            {
                 track_to_put = track_to_put->getTimeWhenFree() < track->getTimeWhenFree() ? track_to_put : track;
             }
         }
@@ -95,13 +96,12 @@ void Agent::threadMain()
 
 void Agent::destroyThread()
 {
-    while(isWorking())
-    {
-    }
+//    while(isWorking())
+//    {
+//    }
 
     if (thread->joinable())
     {
-        std::cout << "Thread with id " << thread->get_id() << " has stopped" << std::endl;
         thread->join();
     }
 }

@@ -8,6 +8,7 @@ class Observer
     Observer();
     virtual ~Observer();
     virtual void update(unsigned int, std::shared_ptr<Action>) = 0;
+    virtual void getResults() = 0;
 };
 
 #endif // OBSERVER_H

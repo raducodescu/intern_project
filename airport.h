@@ -38,6 +38,7 @@ class Airport : public GenericAirport
     void dump_airport(std::ostream&) const override;
     void accept(const std::shared_ptr<ARequest> &request) override;
     void stop();
+    void addObserver(std::shared_ptr<Observer>);
 
     explicit Airport(const std::string &configure_file);
     ~Airport() override;

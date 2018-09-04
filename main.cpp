@@ -7,6 +7,8 @@
 #include "airport.h"
 #include "filegenerator.h"
 #include "dummyconsumer.h"
+#include <QtTest/QTest>
+
 
 int main(int argc, char *argv[])
 {
@@ -21,15 +23,19 @@ int main(int argc, char *argv[])
 
     GlobalTime::getInstance();
 
-    Airport a("/home/radu/intern_project/conf2");
+    std::shared_ptr<Observer> log_observer(new LogObserver("log"));
+    Airport a(argv[1]);
+    a.addObserver(log_observer);
     DummyConsumer dummy;
     FileGenerator fg;
     fg.registerConsumer(&a);
     //fg.registerConsumer(&dummy);
 
-    fg.generateRequests("/home/radu/intern_project/test2");
+    fg.generateRequests(argv[2]);
     std::this_thread::sleep_for(std::chrono::seconds(20));
     a.stop();
+    log_observer->getResults();
+
     return 0;
-    return app.exec();
+    //return app.exec();
 }
