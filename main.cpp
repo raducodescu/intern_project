@@ -7,7 +7,6 @@
 #include "airport.h"
 #include "filegenerator.h"
 #include "dummyconsumer.h"
-#include <QtTest/QTest>
 
 
 int main(int argc, char *argv[])
@@ -29,10 +28,8 @@ int main(int argc, char *argv[])
     DummyConsumer dummy;
     FileGenerator fg;
     fg.registerConsumer(&a);
-    //fg.registerConsumer(&dummy);
 
     fg.generateRequests(argv[2]);
-    std::this_thread::sleep_for(std::chrono::seconds(20));
     a.stop();
     log_observer->getResults();
 

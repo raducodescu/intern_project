@@ -33,8 +33,7 @@ SOURCES += \
     dummyconsumer.cpp \
     action.cpp \
     observer.cpp \
-    logobserver.cpp \
-    testairport.cpp
+    logobserver.cpp
 
 RESOURCES += qml.qrc
 
@@ -67,8 +66,7 @@ HEADERS += \
     dummyconsumer.h \
     action.h \
     observer.h \
-    logobserver.h \
-    testairport.h
+    logobserver.h
 
 DISTFILES += \
     input_conf \
