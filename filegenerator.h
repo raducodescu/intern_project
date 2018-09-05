@@ -16,9 +16,9 @@
 
 class FileGenerator : public RequestGenerator
 {
- private:
-    std::vector<std::shared_ptr<ARequest> > requests;
- public:
+private:
+    std::vector<std::shared_ptr<ARequest> > m_requests;
+public:
     FileGenerator();
 
     void generateRequests(std::string filename);

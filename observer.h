@@ -4,7 +4,7 @@
 
 class Observer
 {
- public:
+public:
     Observer();
     virtual ~Observer();
     virtual void update(unsigned int, std::shared_ptr<Action>) = 0;

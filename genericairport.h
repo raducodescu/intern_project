@@ -5,7 +5,7 @@
 
 class GenericAirport : public RequestConsumer
 {
- public:
+public:
     GenericAirport();
     virtual ~GenericAirport() = 0;
     virtual void dump_airport(std::ostream&) const = 0;

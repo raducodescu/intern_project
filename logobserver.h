@@ -10,12 +10,12 @@
 class LogObserver : public Observer
 {
 private:
-    std::ofstream ost;
+    std::ofstream m_ost;
+    std::mutex m_mutex;
+    ARequestPList m_failed_requests;
+    ARequestPList m_successful_requests;
 public:
     LogObserver(const std::string& file);
-    std::mutex mutex;
-    ARequestPList failed_requests;
-    ARequestPList successful_requests;
     // Observer interface
 public:
     void update(unsigned int, std::shared_ptr<Action>) override;

@@ -7,7 +7,7 @@
 
 class DummyConsumer : public RequestConsumer
 {
- public:
+public:
     DummyConsumer();
 
     // RequestConsumer interface

@@ -2,27 +2,27 @@
 
 unsigned int Action::getAgent_id() const
 {
-    return agent_id;
+    return m_agent_id;
 }
 
 unsigned int Action::getTrack_id() const
 {
-    return track_id;
+    return m_track_id;
 }
 
 ActionType Action::getType() const
 {
-    return type;
+    return m_type;
 }
 
 std::shared_ptr<ARequest> Action::getRequest() const
 {
-    return request;
+    return m_request;
 }
 
 Action::Action(ActionType type, std::shared_ptr<ARequest> request,
-               unsigned int agent_id, unsigned int track_id) : type(type),
-    request(request), agent_id(agent_id), track_id(track_id) {}
+               unsigned int agent_id, unsigned int track_id) : m_type(type),
+    m_request(request), m_agent_id(agent_id), m_track_id(track_id) {}
 
 std::ostream &operator<<(std::ostream &ost, ActionType type)
 {

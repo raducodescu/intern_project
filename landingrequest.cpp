@@ -2,17 +2,17 @@
 
 unsigned int LandingRequest::getFuel() const
 {
-    return fuel;
+    return m_fuel;
 }
 
 void LandingRequest::setFuel(unsigned int value)
 {
-    fuel = value;
+    m_fuel = value;
 }
 
 LandingRequest::LandingRequest(unsigned int creationTime, int id, APlane *plane, unsigned int time,
                                bool urgent, unsigned int fuel, RequestType type) :
-        PlaneRequest(creationTime, id, plane, time, urgent, type), fuel(fuel)
+        PlaneRequest(creationTime, id, plane, time, urgent, type), m_fuel(fuel)
 {
 }
 

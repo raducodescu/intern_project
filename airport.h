@@ -19,14 +19,14 @@
 
 class Airport : public GenericAirport
 {
- private:
-    ARequestPriorityQueue requests;
-    std::vector<std::shared_ptr<Track> > tracks;
-    std::vector<std::shared_ptr<Agent> > agents;
-    std::mutex requests_mutex;
-    AirportPlaneTimes airport_planes_times;
-    ObserverPList observers;
-    std::atomic_bool stopped;
+private:
+    ARequestPriorityQueue m_requests;
+    std::vector<std::shared_ptr<Track> > m_tracks;
+    std::vector<std::shared_ptr<Agent> > m_agents;
+    std::mutex m_requests_mutex;
+    AirportPlaneTimes m_airport_planes_times;
+    ObserverPList m_observers;
+    std::atomic_bool m_stopped;
 
     std::shared_ptr<ARequest> getBestRequest();
     void initializeTracks(QJsonValue &);
@@ -34,7 +34,7 @@ class Airport : public GenericAirport
     void initializeStaticData(QJsonValue &);
     // AbstractAirport interface
 
- public:
+public:
     void dump_airport(std::ostream&) const override;
     void accept(const std::shared_ptr<ARequest> &request) override;
     void stop();

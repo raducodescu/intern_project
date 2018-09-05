@@ -5,7 +5,7 @@
 
 std::vector<std::shared_ptr<Agent> > Airport::getAgents() const
 {
-    return agents;
+    return m_agents;
 }
 
 std::shared_ptr<ARequest> Airport::getBestRequest()
@@ -32,7 +32,7 @@ void Airport::initializeTracks(QJsonValue& tracksValue)
         std::string type = obj.value("type").toString().toStdString();
         TrackSize tsize = Track::getSizeFromString(size);
         TrackType ttype = Track::getTypeFromString(type);
-        tracks.push_back(std::make_shared<Track>(id, tsize, ttype));
+        m_tracks.push_back(std::make_shared<Track>(id, tsize, ttype));
     }
 }
 
@@ -67,8 +67,8 @@ void Airport::initializeAgents(QJsonValue& controlValue)
         if (std::modf(d_capacity, &d_capacity) != 0 || d_capacity < 0)
             throw std::invalid_argument("Control agent capacity is invalid");
         unsigned int capacity = static_cast<unsigned int>(d_capacity);
-        agents.push_back(std::make_shared<Agent>(id, capacity, name, requests_mutex, &requests,
-                            &tracks, &observers));
+        m_agents.push_back(std::make_shared<Agent>(id, capacity, name, m_requests_mutex, &m_requests,
+                            &m_tracks, &m_observers));
     }
 }
 
@@ -81,25 +81,25 @@ void Airport::initializeStaticData(QJsonValue& staticDataValue)
         time = static_data.value("SMALLTIME").toInt();
         if (time < 0)
             throw std::invalid_argument("Times on track should be positive");
-        airport_planes_times.small_plane_time = static_cast<unsigned>(time);
+        m_airport_planes_times.small_plane_time = static_cast<unsigned>(time);
     }
     if (static_data.contains("MEDIUMTIME"))
     {
         time = static_data.value("MEDIUMTIME").toInt();
         if (time < 0)
             throw std::invalid_argument("Times on track should be positive");
-        airport_planes_times.medium_plane_time = static_cast<unsigned>(time);
+        m_airport_planes_times.medium_plane_time = static_cast<unsigned>(time);
     }
     if (static_data.contains("LARGETIME"))
     {
         time = static_data.value("LARGETIME").toInt();
         if (time < 0)
             throw std::invalid_argument("Times on track should be positive");
-        airport_planes_times.large_plane_time = static_cast<unsigned>(time);
+        m_airport_planes_times.large_plane_time = static_cast<unsigned>(time);
     }
 }
 
-Airport::Airport(const std::string &configure_file) : stopped(false)
+Airport::Airport(const std::string &configure_file) : m_stopped(false)
 {
     auto conf_obj = readJson(configure_file);
 
@@ -120,7 +120,7 @@ Airport::Airport(const std::string &configure_file) : stopped(false)
     initializeAgents(agents_value);
     initializeStaticData(static_data_value);
 
-    foreach (auto a, agents)
+    foreach (auto a, m_agents)
     {
         a->startThread();
     }
@@ -129,7 +129,7 @@ Airport::Airport(const std::string &configure_file) : stopped(false)
 
 void Airport::accept(const std::shared_ptr<ARequest> &request)
 {
-    if (stopped)
+    if (m_stopped)
     {
         std::cout << "Airport is stopped" << std::endl;
     }
@@ -137,17 +137,17 @@ void Airport::accept(const std::shared_ptr<ARequest> &request)
     switch (request->getPlaneInfo().getSize())
     {
     case PlaneSize::SMALL:
-        request->getPlaneInfo().setTimeOnTrack(airport_planes_times.small_plane_time);
+        request->getPlaneInfo().setTimeOnTrack(m_airport_planes_times.small_plane_time);
         break;
     case PlaneSize::MEDIUM:
-        request->getPlaneInfo().setTimeOnTrack(airport_planes_times.medium_plane_time);
+        request->getPlaneInfo().setTimeOnTrack(m_airport_planes_times.medium_plane_time);
         break;
     case PlaneSize::LARGE:
-        request->getPlaneInfo().setTimeOnTrack(airport_planes_times.large_plane_time);
+        request->getPlaneInfo().setTimeOnTrack(m_airport_planes_times.large_plane_time);
         break;
     }
     bool is_request_good = false;
-    foreach(auto track, tracks)
+    foreach(auto track, m_tracks)
     {
         is_request_good |= track->isRequestAcceptable(request->getPlaneInfo());
     }
@@ -156,25 +156,25 @@ void Airport::accept(const std::shared_ptr<ARequest> &request)
         std::cout << "Request with id " << request->getId() << " can't be process in this airport" << std::endl;
         return;
     }
-    std::unique_lock<std::mutex> lock(requests_mutex);
-    requests.push(request);
+    std::unique_lock<std::mutex> lock(m_requests_mutex);
+    m_requests.push(request);
     lock.unlock();
 }
 
 void Airport::stop()
 {
-    stopped = true;
+    m_stopped = true;
     bool wait = true;
-    while (requests.size() || wait)
+    while (m_requests.size() || wait)
     {
         wait = false;
-        foreach (auto agent, agents) {
+        foreach (auto agent, m_agents) {
             wait |= agent->isWorking();
         }
 
     }
 
-    foreach (auto agent, agents)
+    foreach (auto agent, m_agents)
     {
         agent->stopThread();
     }
@@ -182,12 +182,12 @@ void Airport::stop()
 
 void Airport::addObserver(std::shared_ptr<Observer> observer)
 {
-    observers.push_back(observer);
+    m_observers.push_back(observer);
 }
 
 Airport::~Airport()
 {
-    foreach(auto a, agents)
+    foreach(auto a, m_agents)
     {
         a->stopThread();
     }
@@ -196,13 +196,13 @@ Airport::~Airport()
 QDebug operator<<(QDebug debug, const Airport &airport) {
     debug << "Airort data:" << endl;
     debug << "Agents:" << endl;
-    foreach(auto agent, airport.agents)
+    foreach(auto agent, airport.m_agents)
     {
         debug << "\t" << *agent << endl;
     }
     debug << endl;
     debug << "Tracks:" << endl;
-    foreach(auto track, airport.tracks)
+    foreach(auto track, airport.m_tracks)
     {
         debug << "\t" << *track << endl;
     }
@@ -219,13 +219,13 @@ void Airport::dump_airport(std::ostream &ost) const
 {
     ost << "Airort data:" << std::endl;
     ost << "Agents:" << std::endl;
-    foreach (auto agent, agents)
+    foreach (auto agent, m_agents)
     {
         ost << "\t" << *agent;
     }
     ost << std::endl;
     ost << "Tracks: " << std::endl;
-    foreach (auto track, tracks)
+    foreach (auto track, m_tracks)
     {
         ost << "\t" << *track;
     }

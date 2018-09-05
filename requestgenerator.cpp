@@ -10,5 +10,5 @@ RequestGenerator::~RequestGenerator()
 
 void RequestGenerator::registerConsumer(RequestConsumer* requestConsumer)
 {
-   this->requestConsumers.push_back(requestConsumer);
+   this->m_request_consumers.push_back(requestConsumer);
 }

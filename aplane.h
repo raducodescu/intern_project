@@ -18,7 +18,7 @@ std::ostream& operator<<(std::ostream &, PlaneType);
 
 class APlane
 {
- public:
+public:
     APlane();
     virtual ~APlane();
 
@@ -30,8 +30,8 @@ class APlane
     virtual PlaneSize getSize() const = 0;
     virtual unsigned int getTimeOnTrack() const = 0;
     virtual void setTimeOnTrack(unsigned int) = 0;
-
     virtual void dump_plane() const = 0;
+
     friend std::ostream& operator<<(std::ostream &, const APlane&);
 };
 

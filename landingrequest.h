@@ -5,14 +5,14 @@
 
 class LandingRequest : public PlaneRequest
 {
- private:
-    unsigned int fuel;
+private:
+    unsigned int m_fuel;
     void dump_request(std::ostream &ost) const override;
- public:
-    LandingRequest(unsigned int creation_time, int id, APlane *plane,
-                   unsigned int requestTime, bool urgent, unsigned int fuel,
+public:
+    LandingRequest(unsigned int creation_time, int m_id, APlane *m_plane,
+                   unsigned int m_request_time, bool m_urgent, unsigned int m_fuel,
                    RequestType type);
-    // PlaneRequest interface
+
     unsigned int getFuel() const;
     void setFuel(unsigned int value);
 

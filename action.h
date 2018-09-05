@@ -12,14 +12,14 @@ std::ostream& operator<<(std::ostream &, ActionType);
 
 class Action
 {
- private:
-    ActionType type;
-    std::shared_ptr<ARequest> request;
-    unsigned int agent_id;
-    unsigned int track_id;
- public:
-    Action(ActionType type, std::shared_ptr<ARequest> request,
-           unsigned int agent_id, unsigned int track_id);
+private:
+    ActionType m_type;
+    std::shared_ptr<ARequest> m_request;
+    unsigned int m_agent_id;
+    unsigned int m_track_id;
+public:
+    Action(ActionType m_type, std::shared_ptr<ARequest> m_request,
+           unsigned int m_agent_id, unsigned int m_track_id);
     unsigned int getAgent_id() const;
     unsigned int getTrack_id() const;
     ActionType getType() const;

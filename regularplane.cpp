@@ -2,28 +2,28 @@
 
 unsigned int RegularPlane::getTimeOnTrack() const
 {
-    return timeOnTrack;
+    return m_time_on_track;
 }
 
 void RegularPlane::setTimeOnTrack(unsigned int value)
 {
-    timeOnTrack = value;
+    m_time_on_track = value;
 }
 
 RegularPlane::RegularPlane(unsigned int consumption, PlaneType type, PlaneSize size) :
-    consumption(consumption), type(type), size(size)
+    m_consumption(consumption), m_type(type), m_size(size)
 {
 }
 
 
 PlaneType RegularPlane::getType() const
 {
-    return type;
+    return m_type;
 }
 
 PlaneSize RegularPlane::getSize() const
 {
-    return size;
+    return m_size;
 }
 
 std::ostream& operator<<(std::ostream &ost, const RegularPlane &plane)
@@ -34,10 +34,10 @@ std::ostream& operator<<(std::ostream &ost, const RegularPlane &plane)
 
 void RegularPlane::dump_plane() const
 {
-    std::cout << "Plane with type " << type << " and size " << size << " with consumption " << consumption << std::endl;
+    std::cout << "Plane with type " << m_type << " and size " << m_size << " with consumption " << m_consumption << std::endl;
 }
 
 unsigned int RegularPlane::getConsumption() const
 {
-    return consumption;
+    return m_consumption;
 }

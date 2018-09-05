@@ -2,7 +2,7 @@
 
 void Agent::notify(std::shared_ptr<Action> action)
 {
-    foreach (std::shared_ptr<Observer> observer, *observers){
+    foreach (std::shared_ptr<Observer> observer, *m_observers){
         observer->update(GlobalTime::getInstance().getGlobalTime(), action);
     }
 }
@@ -10,9 +10,31 @@ void Agent::notify(std::shared_ptr<Action> action)
 std::shared_ptr<Track> Agent::getBestTrack(std::shared_ptr<ARequest> req)
 {
     std::shared_ptr<Track> track_to_put = nullptr;
+
+    switch (req->getPlaneInfo().getSize()) {
+    case PlaneSize::SMALL:
+        track_to_put = getBestTypeTrack(req, TrackSize::SMALL);
+        if (track_to_put)
+            return track_to_put;
+    case PlaneSize::MEDIUM:
+        track_to_put = getBestTypeTrack(req, TrackSize::MEDIUM);
+        if (track_to_put)
+            return track_to_put;
+    case PlaneSize::LARGE:
+        track_to_put = getBestTypeTrack(req, TrackSize::LARGE);
+        if (track_to_put)
+            return track_to_put;
+    }
+    return track_to_put;
+}
+
+std::shared_ptr<Track> Agent::getBestTypeTrack(std::shared_ptr<ARequest> req, TrackSize size)
+{
+    std::shared_ptr<Track> track_to_put = nullptr;
     unsigned int requestTime = req->getRequestTime();
-    foreach (auto track, *tracks) {
-        if (track->isRequestAcceptable(req->getPlaneInfo()) && track->getTimeWhenFree() >= requestTime && req->checkFuel(track->getTimeWhenFree())) {
+
+    foreach (auto track, *m_tracks) {
+        if (track->getSize() == size && track->isRequestAcceptable(req->getPlaneInfo()) && track->getTimeWhenFree() >= requestTime && req->checkFuel(track->getTimeWhenFree())) {
             if (track_to_put == nullptr) {
                 track_to_put = track;
             }
@@ -25,22 +47,23 @@ std::shared_ptr<Track> Agent::getBestTrack(std::shared_ptr<ARequest> req)
     return track_to_put;
 }
 
+
 void Agent::processLocalRequests(unsigned int actual_time)
 {
-    for (auto riteraor = agent_requests.begin(); riteraor != agent_requests.end();)
+    for (auto riteraor = m_agent_requests.begin(); riteraor != m_agent_requests.end();)
     {
         auto request = *riteraor;
         bool processed = false;
-        foreach (auto track, *tracks)
+        foreach (auto track, *m_tracks)
         {
             if (track->isRequestProcessNow(request))
             {
                 if (request->getProcessTime() + request->getPlaneInfo().getTimeOnTrack() == actual_time) {
                     processed = true;
                     track->removeTopRequest();
-                    agent_requests.erase(riteraor);
+                    m_agent_requests.erase(riteraor);
                     ActionType type = request->getType() == RequestType::LANDING ? ActionType::LANDING : ActionType::TAKEOFF;
-                    std::shared_ptr<Action> action = std::make_shared<Action>(type, request, id, track->getId());
+                    std::shared_ptr<Action> action = std::make_shared<Action>(type, request, m_id, track->getId());
                     notify(action);
                 }
             }
@@ -52,42 +75,42 @@ void Agent::processLocalRequests(unsigned int actual_time)
 
 void Agent::threadMain()
 {
-    while (running || isWorking())
+    while (m_running || isWorking())
     {
         unsigned int actual_time = GlobalTime::getInstance().getGlobalTime();
-        if (actual_time - time_last_check == 0)
+        if (actual_time - m_time_last_check == 0)
             continue;
 
-        time_last_check = actual_time;
+        m_time_last_check = actual_time;
         processLocalRequests(actual_time);
 
-        while (canProcessAnotherRequest() && GlobalTime::getInstance().getGlobalTime() - time_last_check < 1)
+        while (canProcessAnotherRequest() && GlobalTime::getInstance().getGlobalTime() - m_time_last_check < 1)
         {
-            std::unique_lock<std::mutex> lock(requests_mutex);
-            if (airport_requests->size() == 0)
+            std::unique_lock<std::mutex> lock(m_requests_mutex);
+            if (m_airport_requests->size() == 0)
             {
                 break;
             }
-            auto req = airport_requests->top();
+            auto req = m_airport_requests->top();
             if (req->getRequestTime() > actual_time)
             {
                 lock.unlock();
                 break;
             }
-            airport_requests->pop();
+            m_airport_requests->pop();
             std::shared_ptr<Track> trackToPut = getBestTrack(req);
             lock.unlock();
             if (trackToPut == nullptr)
             {
                 req->setProcessTime(actual_time);
-                std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::FAILED, req, id, 0);
+                std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::FAILED, req, m_id, 0);
                 notify(action);
             }
             else
             {
                 trackToPut->addRequest(req);
-                agent_requests.push_back(req);
-                std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::RECEIVE, req, id, trackToPut->getId());
+                m_agent_requests.push_back(req);
+                std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::RECEIVE, req, m_id, trackToPut->getId());
                 notify(action);
             }
         }
@@ -100,60 +123,61 @@ void Agent::destroyThread()
 //    {
 //    }
 
-    if (thread->joinable())
+    if (m_thread->joinable())
     {
-        thread->join();
+        m_thread->join();
     }
 }
 
 void Agent::stopThread()
 {
-    running = false;
+    m_running = false;
     destroyThread();
 }
 
 bool Agent::canProcessAnotherRequest()
 {
-    return agent_requests.size() < capacity;
+    return m_agent_requests.size() < m_capacity;
 }
 
 bool Agent::isWorking() {
-    return agent_requests.size() > 0;
+    return m_agent_requests.size() > 0;
 }
 
 Agent::Agent(int id, unsigned int capacity, const std::string &name, std::mutex &requests_mutex,
              ARequestPriorityQueue *airport_requests,
              std::vector<std::shared_ptr<Track>> *tracks, ObserverPList *observers) :
-            id(id), capacity(capacity), name(name), airport_requests(airport_requests), tracks(tracks),
-            requests_mutex(requests_mutex),observers(observers) {
-    running = false;
-    time_last_check = 0;
+            m_id(id), m_capacity(capacity), m_name(name), m_observers(observers), m_tracks(tracks),
+            m_airport_requests(airport_requests), m_requests_mutex(requests_mutex)
+{
+    m_running = false;
+    m_time_last_check = 0;
 }
 
 unsigned int Agent::getCapacity() const
 {
-    return capacity;
+    return m_capacity;
 }
 
 void Agent::setCapacity(unsigned int capacity)
 {
-    this->capacity = capacity;
+    this->m_capacity = capacity;
 }
 
 const std::string& Agent::getName() const
 {
-    return name;
+    return m_name;
 }
 
 int Agent::getId() const
 {
-    return id;
+    return m_id;
 }
 
 void Agent::startThread()
 {
-    running = true;
-    thread = std::unique_ptr<std::thread>(new std::thread(&Agent::threadMain, this));
+    m_running = true;
+    m_thread = std::unique_ptr<std::thread>(new std::thread(&Agent::threadMain, this));
 }
 
 QDebug operator<<(QDebug debug, const Agent &agent)
@@ -164,6 +188,6 @@ QDebug operator<<(QDebug debug, const Agent &agent)
 
 std::ostream& operator<<(std::ostream& ost, const Agent &agent)
 {
-    ost << "Agent[" << agent.getId() << "]--Name[" << agent.getName() << "]--Capacity[" << agent.getCapacity() << "]" << std::endl;
+    ost << "Agent[" << agent.getId() << "]---Name[" << agent.getName() << "]---Capacity[" << agent.getCapacity() << "]" << std::endl;
     return ost;
 }

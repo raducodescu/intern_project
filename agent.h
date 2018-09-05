@@ -17,25 +17,28 @@
 
 class Agent
 {
- private:
-    const int id;
-    unsigned int capacity;
-    const std::string name;
-    unsigned int time_last_check;
-    ARequestPriorityQueue *airport_requests;
-    std::vector<std::shared_ptr<Track>> *tracks;
-    ARequestPList agent_requests;
-    std::unique_ptr<std::thread> thread;
-    std::atomic_bool running;
-    std::mutex &requests_mutex;
-    ObserverPList *observers;
+private:
+    const int m_id;
+    unsigned int m_capacity;
+    const std::string m_name;
+    unsigned int m_time_last_check;
+
+    std::unique_ptr<std::thread> m_thread;
+    std::atomic_bool m_running;
+    ObserverPList *m_observers;
+
+    ARequestPList m_agent_requests;
+    std::vector<std::shared_ptr<Track>> *m_tracks;
+    ARequestPriorityQueue *m_airport_requests;
+    std::mutex &m_requests_mutex;
 
     void threadMain();
     void destroyThread();
     void processLocalRequests(unsigned int actual_time);
     void notify(std::shared_ptr<Action>);
     std::shared_ptr<Track> getBestTrack(std::shared_ptr<ARequest>);
- public:
+    std::shared_ptr<Track> getBestTypeTrack(std::shared_ptr<ARequest>, TrackSize);
+public:
     Agent(int, unsigned int, const std::string &, std::mutex &, ARequestPriorityQueue *,
           std::vector<std::shared_ptr<Track> > *, ObserverPList *);
     unsigned int getCapacity() const;

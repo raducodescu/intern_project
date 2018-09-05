@@ -5,13 +5,13 @@
 
 class RegularPlane : public APlane
 {
- private:
-    unsigned int consumption;
-    const PlaneType type;
-    const PlaneSize size;
-    unsigned int timeOnTrack;
- public:
-    RegularPlane(unsigned int consumption, PlaneType type, PlaneSize size);
+private:
+    unsigned int m_consumption;
+    const PlaneType m_type;
+    const PlaneSize m_size;
+    unsigned int m_time_on_track;
+public:
+    RegularPlane(unsigned int m_consumption, PlaneType m_type, PlaneSize m_size);
     // APlane interface
     void dump_plane() const override;
     unsigned int getConsumption() const override;

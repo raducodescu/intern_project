@@ -9,14 +9,14 @@
 
 class PlaneRequest : public ARequest
 {
- private:
-    const int id;
-    std::unique_ptr<APlane> plane;
-    unsigned int requestTime;
-    bool urgent;
- public:
-    PlaneRequest(unsigned int creationTime, int id, APlane *plane,
-                 unsigned int requestTime, bool urgent, RequestType type);
+private:
+    const int m_id;
+    std::unique_ptr<APlane> m_plane;
+    unsigned int m_request_time;
+    bool m_urgent;
+public:
+    PlaneRequest(unsigned int creationTime, int m_id, APlane *m_plane,
+                 unsigned int m_request_time, bool m_urgent, RequestType type);
     ~PlaneRequest() override;
     // ARequest interface
     int getId() const override;

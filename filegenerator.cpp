@@ -94,10 +94,10 @@ void FileGenerator::generateRequests(std::string filename)
             int fuel = static_cast<int>(d_fuel);
             request = std::make_shared<LandingRequest>(creationTime, id, plane, time, urgent, fuel, RequestType::LANDING);
         }
-        foreach (auto consumer, requestConsumers)
+        foreach (auto consumer, m_request_consumers)
         {
             consumer->accept(request);
         }
-        requests.push_back(request);
+        m_requests.push_back(request);
     }
 }

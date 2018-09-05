@@ -6,9 +6,9 @@
 
 class RequestGenerator
 {
- protected:
-    std::vector<RequestConsumer*> requestConsumers;
- public:
+protected:
+    std::vector<RequestConsumer*> m_request_consumers;
+public:
     RequestGenerator();
     virtual ~RequestGenerator() = 0;
     void registerConsumer(RequestConsumer *requestConsumer);

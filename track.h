@@ -26,13 +26,13 @@ std::ostream& operator<<(std::ostream &, TrackSize);
 class Track
 {
  private:
-    const int id;
-    const TrackSize size;
-    TrackType type;
-    std::queue<std::shared_ptr<ARequest> > requests_queue;
-    unsigned int time_when_free;
+    const int m_id;
+    const TrackSize m_size;
+    TrackType m_type;
+    std::queue<std::shared_ptr<ARequest> > m_requests_queue;
+    unsigned int m_time_when_free;
  public:
-    Track(int id, TrackSize size, TrackType type);
+    Track(int m_id, TrackSize m_size, TrackType m_type);
     TrackSize getSize() const;
     TrackType getType() const;
     int getId() const;

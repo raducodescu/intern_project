@@ -8,8 +8,8 @@ class TakeOffRequest : public PlaneRequest
     void dump_request(std::ostream &ost) const override;
 
  public:
-    TakeOffRequest(unsigned int creation_time, int id, APlane *plane,
-                   unsigned int requestTime, bool urgent, RequestType type);
+    TakeOffRequest(unsigned int creation_time, int m_id, APlane *m_plane,
+                   unsigned int m_request_time, bool m_urgent, RequestType type);
     // ARequest interface
     bool checkFuel(unsigned int) const override;
 };

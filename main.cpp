@@ -22,8 +22,11 @@ int main(int argc, char *argv[])
 
     GlobalTime::getInstance();
 
-    std::shared_ptr<Observer> log_observer(new LogObserver("log"));
+    std::ofstream ost("airport.log");
+    std::shared_ptr<Observer> log_observer(new LogObserver(argv[3]));
     Airport a(argv[1]);
+
+    a.dump_airport(ost);
     a.addObserver(log_observer);
     DummyConsumer dummy;
     FileGenerator fg;
@@ -34,5 +37,4 @@ int main(int argc, char *argv[])
     log_observer->getResults();
 
     return 0;
-    //return app.exec();
 }

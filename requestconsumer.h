@@ -5,7 +5,7 @@
 
 class RequestConsumer
 {
- public:
+public:
     RequestConsumer();
     virtual void accept(const std::shared_ptr<ARequest> &request) = 0;
     virtual ~RequestConsumer() = 0;

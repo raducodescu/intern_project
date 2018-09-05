@@ -2,29 +2,29 @@
 
 int PlaneRequest::getId() const
 {
-    return id;
+    return m_id;
 }
 
 APlane& PlaneRequest::getPlaneInfo() const
 {
-    return *plane;
+    return *m_plane;
 }
 
 bool PlaneRequest::isUrgent() const
 {
-    return urgent;
+    return m_urgent;
 }
 
 unsigned int PlaneRequest::getRequestTime() const
 {
-    return requestTime;
+    return m_request_time;
 }
 
 
 PlaneRequest::PlaneRequest(unsigned int creationTime, int id, APlane *plane,
                            unsigned int time, bool urgent, RequestType type) :
-        ARequest(creationTime, type), id(id), plane(plane),
-        requestTime(time), urgent(urgent)
+        ARequest(creationTime, type), m_id(id), m_plane(plane),
+        m_request_time(time), m_urgent(urgent)
 {
 }
 

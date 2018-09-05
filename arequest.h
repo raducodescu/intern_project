@@ -12,11 +12,11 @@ enum class RequestType
 
 class ARequest : public std::enable_shared_from_this<ARequest>
 {
- private:
+private:
     const unsigned int creationTime;
     unsigned int processTime;
     const RequestType type;
- public:
+public:
     ARequest(unsigned int creationTime, RequestType type);
     virtual ~ARequest();
 

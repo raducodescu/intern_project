@@ -18,21 +18,21 @@ std::shared_ptr<QJsonObject> readJson(const std::string &filename)
 
 GlobalTime::GlobalTime()
 {
-    future = std::async(std::launch::async,
+    m_future = std::async(std::launch::async,
                         &GlobalTime::increment_function, this);
 }
 
 void GlobalTime::increment_function()
 {
     while (true) {
-        this->global_time++;
+        this->m_global_time++;
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
 
 unsigned int GlobalTime::getGlobalTime() const
 {
-    return global_time;
+    return m_global_time;
 }
 
 GlobalTime &GlobalTime::getInstance()

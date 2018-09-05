@@ -28,8 +28,8 @@ struct AirportPlaneTimes
 class GlobalTime
 {
  private:
-    unsigned int global_time;
-    std::future<void> future;
+    unsigned int m_global_time;
+    std::future<void> m_future;
     GlobalTime();
     void increment_function();
  public:

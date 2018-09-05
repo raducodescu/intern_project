@@ -4,33 +4,33 @@
 
 int Track::getId() const
 {
-    return id;
+    return m_id;
 }
 
 unsigned int Track::getTimeWhenFree()
 {
-    if (requests_queue.size() == 0) {
+    if (m_requests_queue.size() == 0) {
         return GlobalTime::getInstance().getGlobalTime();
     }
     else
     {
-        return time_when_free;
+        return m_time_when_free;
     }
 }
 
 bool Track::isFree()
 {
-    return requests_queue.size() == 0;
+    return m_requests_queue.size() == 0;
 }
 
 bool Track::isRequestAcceptable(const APlane &plane)
 {
-    switch (size)
+    switch (m_size)
     {
     case TrackSize::LARGE:
         if (plane.getType() == PlaneType::MILITARY)
             return true;
-        else if (type == TrackType::ALL)
+        else if (m_type == TrackType::ALL)
             return true;
         else
             return false;
@@ -39,7 +39,7 @@ bool Track::isRequestAcceptable(const APlane &plane)
             return false;
         if (plane.getType() == PlaneType::MILITARY)
             return true;
-        else if (type == TrackType::ALL)
+        else if (m_type == TrackType::ALL)
             return true;
         else
             return false;
@@ -48,7 +48,7 @@ bool Track::isRequestAcceptable(const APlane &plane)
             return false;
         if (plane.getType() == PlaneType::MILITARY)
             return true;
-        else if (type == TrackType::ALL)
+        else if (m_type == TrackType::ALL)
             return true;
         else
             return false;
@@ -58,32 +58,32 @@ bool Track::isRequestAcceptable(const APlane &plane)
 
 bool Track::isRequestProcessNow(std::shared_ptr<ARequest> &req) const
 {
-    if (requests_queue.size() == 0)
+    if (m_requests_queue.size() == 0)
         return false;
-    return req == requests_queue.front();
+    return req == m_requests_queue.front();
 }
 
 void Track::removeTopRequest()
 {
-    requests_queue.pop();
+    m_requests_queue.pop();
 }
 
 void Track::addRequest(std::shared_ptr<ARequest> &request)
 {
     auto actual_time = GlobalTime::getInstance().getGlobalTime();
-    auto track_time = requests_queue.size() == 0 ? actual_time : time_when_free;
+    auto track_time = m_requests_queue.size() == 0 ? actual_time : m_time_when_free;
     request->setProcessTime(track_time);
-    time_when_free = track_time + request->getPlaneInfo().getTimeOnTrack();
-    requests_queue.push(request);
+    m_time_when_free = track_time + request->getPlaneInfo().getTimeOnTrack();
+    m_requests_queue.push(request);
 }
 
-Track::Track(int id, TrackSize size, TrackType type) : id(id), size(size), type(type), time_when_free(0)
+Track::Track(int id, TrackSize size, TrackType type) : m_id(id), m_size(size), m_type(type), m_time_when_free(0)
 {
 }
 
 TrackType Track::getType() const
 {
-    return type;
+    return m_type;
 }
 
 TrackType Track::getTypeFromString(const std::string &string)
@@ -125,12 +125,12 @@ QDebug operator<<(QDebug debug, const Track& track)
 
 TrackSize Track::getSize() const
 {
-    return size;
+    return m_size;
 }
 
 std::ostream& operator<<(std::ostream& ost, const Track &track)
 {
-    ost << "Track[" << track.getId() << "]--Size[" << track.getSize() << "]--Type[" << track.getType() << "]" << std::endl;
+    ost << "Track[" << track.getId() << "]---Size[" << track.getSize() << "]---Type[" << track.getType() << "]" << std::endl;
     return ost;
 }
 
