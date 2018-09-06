@@ -11,6 +11,9 @@ private:
     const PlaneSize m_size;
     unsigned int m_time_on_track;
 public:
+
+// Ionut: parameter names should not start with m_, only member names.
+
     RegularPlane(unsigned int m_consumption, PlaneType m_type, PlaneSize m_size);
 
     // APlane interface
