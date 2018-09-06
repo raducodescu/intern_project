@@ -5,21 +5,14 @@
 
 // Ionut: Could these containers be returned by const& instead copy?
 
-std::vector<std::shared_ptr<Agent> > Airport::getAgents() const
+const std::vector<std::shared_ptr<Agent>>& Airport::getAgents() const
 {
     return m_agents;
 }
 
-// Ionut: it below function used? does not seem implemented.
-
-std::shared_ptr<ARequest> Airport::getBestRequest()
-{
-    return nullptr;
-}
-
 // Ionut: can parameter be const& ?
 
-void Airport::initializeTracks(QJsonValue& tracksValue)
+void Airport::initializeTracks(const QJsonValue& tracksValue)
 {
     QJsonArray track_list = tracksValue.toArray();
 
@@ -44,7 +37,7 @@ void Airport::initializeTracks(QJsonValue& tracksValue)
 
 // Ionut: parameter const& ?
 
-void Airport::initializeAgents(QJsonValue& controlValue)
+void Airport::initializeAgents(const QJsonValue& controlValue)
 {
     QJsonArray control_agents = controlValue.toArray();
 
@@ -80,7 +73,7 @@ void Airport::initializeAgents(QJsonValue& controlValue)
     }
 }
 
-void Airport::initializeStaticData(QJsonValue& staticDataValue)
+void Airport::initializeStaticData(const QJsonValue& staticDataValue)
 {
     QJsonObject static_data = staticDataValue.toObject();
     int time;
@@ -109,7 +102,13 @@ void Airport::initializeStaticData(QJsonValue& staticDataValue)
 
 Airport::Airport(const std::string &configure_file) : m_stopped(false)
 {
-    auto conf_obj = readJson(configure_file);
+    std::shared_ptr<QJsonObject> conf_obj = nullptr;
+    try {
+        conf_obj = readJson(configure_file);
+    } catch (std::exception &e) {
+        std::cout << "Exception when reading file: " << e.what() << std::endl;
+        return;
+    }
 
     QJsonValue agents_value = conf_obj->value("control");
     QJsonValue tracks_value = conf_obj->value("tracks");
@@ -130,11 +129,6 @@ Airport::Airport(const std::string &configure_file) : m_stopped(false)
 
     // Ionut: starting of threads it would be better to be kept as explicit action outside of constructor.
     
-    foreach (auto a, m_agents)
-    {
-        a->startThread();
-    }
-
 }
 
 void Airport::accept(const std::shared_ptr<ARequest> &request)
@@ -202,6 +196,14 @@ Airport::~Airport()
     foreach(auto a, m_agents)
     {
         a->stopThread();
+    }
+}
+
+void Airport::startThreads()
+{
+    foreach (auto a, m_agents)
+    {
+        a->startThread();
     }
 }
 

@@ -18,6 +18,7 @@ using ObserverPList = std::vector<std::shared_ptr<Observer>>;
 using ARequestPriorityQueue = std::priority_queue<std::shared_ptr<ARequest>,
     std::vector<std::shared_ptr<ARequest>>, DereferenceCompareARequest>;
 
+
 struct AirportPlaneTimes
 {
     unsigned int small_plane_time = 1;
@@ -28,12 +29,14 @@ struct AirportPlaneTimes
 class GlobalTime
 {
 private:
-    unsigned int m_global_time;
+    volatile unsigned int m_global_time;
     std::future<void> m_future;
 
     GlobalTime();
-    void increment_function();
+    ~GlobalTime();
+    GlobalTime(const GlobalTime &) = delete;
     
+    void increment_function();
     // IONUT: Singleton needs to have declared private or deleted the contructors, destructors, copy and assignment.
     
 public:

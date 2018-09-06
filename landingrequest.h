@@ -11,7 +11,7 @@ private:
 public:
     LandingRequest(unsigned int creation_time, int m_id, APlane *m_plane,
                    unsigned int m_request_time, bool m_urgent, unsigned int m_fuel,
-                   RequestType type);
+                   RequestType m_type);
 
     unsigned int getFuel() const;
     void setFuel(unsigned int value);

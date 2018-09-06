@@ -7,7 +7,8 @@
 
 enum class RequestType
 {
-    LANDING, TAKEOFF
+    LANDING,
+    TAKEOFF
 };
 
 class ARequest
@@ -16,9 +17,9 @@ private:
     
     // Ionut: m_* names
     
-    const unsigned int creationTime;
-    unsigned int processTime;
-    const RequestType type;
+    const unsigned int m_creationTime;
+    unsigned int m_processTime;
+    const RequestType m_type;
 public:
     ARequest(unsigned int creationTime, RequestType type);
     virtual ~ARequest();
@@ -63,8 +64,8 @@ struct DereferenceCompareARequest : public std::binary_function<std::shared_ptr<
 
 // Ionut: can these two be const& ?
 
-        APlane &p1 = req1->getPlaneInfo();
-        APlane &p2 = req2->getPlaneInfo();
+        const APlane &p1 = req1->getPlaneInfo();
+        const APlane &p2 = req2->getPlaneInfo();
 
         switch (p1.getType())
         {

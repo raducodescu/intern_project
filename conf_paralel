@@ -9,12 +9,12 @@
                 { "id" : 2, "name" : "Mike", "capacity" : 3}
         ],
         "tracks": [
-                { "id" : 2, "size": "medium", "type" : "all"},
-                { "id" : 3, "size": "small", "type" : "all"},
-                { "id" : 1, "size": "large", "type" : "all"},
-                { "id" : 4, "size": "large", "type" : "all"},
-                { "id" : 5, "size": "medium", "type" : "all"},
-                { "id" : 6, "size": "small", "type" : "all"}
+                { "id" : 2, "size": "medium", "type" : "public"},
+                { "id" : 3, "size": "small", "type" : "public"},
+                { "id" : 1, "size": "large", "type" : "public"},
+                { "id" : 4, "size": "large", "type" : "public"},
+                { "id" : 5, "size": "medium", "type" : "public"},
+                { "id" : 6, "size": "small", "type" : "public"}
         ]
 
 }

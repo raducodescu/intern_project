@@ -15,8 +15,8 @@ private:
     unsigned int m_request_time;
     bool m_urgent;
 public:
-    PlaneRequest(unsigned int creationTime, int m_id, APlane *m_plane,
-                 unsigned int m_request_time, bool m_urgent, RequestType type);
+    PlaneRequest(unsigned int m_creationTime, int m_id, APlane *m_plane,
+                 unsigned int m_request_time, bool m_urgent, RequestType m_type);
     ~PlaneRequest() override;
     // ARequest interface
     int getId() const override;

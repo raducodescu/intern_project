@@ -8,9 +8,9 @@
                 { "id" : 1, "name" : "John", "capacity" : 3}
         ],
         "tracks": [
-                { "id" : 1, "size": "large", "type" : "all"},
-                { "id" : 2, "size": "medium", "type" : "all"},
-                { "id" : 3, "size": "small", "type" : "all"}
+                { "id" : 1, "size": "large", "type" : "public"},
+                { "id" : 2, "size": "medium", "type" : "public"},
+                { "id" : 3, "size": "small", "type" : "public"}
         ]
 
 }

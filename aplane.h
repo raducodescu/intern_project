@@ -5,12 +5,15 @@
 
 enum class PlaneType
 {
-    COMMERCIAL, MILITARY
+    COMMERCIAL,
+    MILITARY
 };
 
 enum class PlaneSize
 {
-    SMALL, MEDIUM, LARGE
+    SMALL,
+    MEDIUM,
+    LARGE
 };
 
 std::ostream& operator<<(std::ostream &, PlaneSize);

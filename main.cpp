@@ -7,6 +7,7 @@
 #include "airport.h"
 #include "filegenerator.h"
 #include "dummyconsumer.h"
+#include "logobserver.h"
 
 
 int main(int argc, char *argv[])
@@ -27,7 +28,7 @@ int main(int argc, char *argv[])
     std::ofstream ost("airport.log");
     std::shared_ptr<Observer> log_observer(new LogObserver(argv[3]));
     Airport a(argv[1]);
-
+    a.startThreads();
     a.dump_airport(ost);
     a.addObserver(log_observer);
     DummyConsumer dummy;
@@ -37,6 +38,6 @@ int main(int argc, char *argv[])
     fg.generateRequests(argv[2]);
     a.stop();
     log_observer->getResults();
-
+    exit(0);
     return 0;
 }

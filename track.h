@@ -13,15 +13,16 @@
 enum class TrackType
 {
     // Ionut: PUBLIC is better name than ALL
-    
-    ALL, PRIVATE
+    PUBLIC,
+    PRIVATE
 };
 
 enum class TrackSize
 {
     // Ionut: looks better writing enum items on separate line
-    
-    SMALL, MEDIUM, LARGE
+    SMALL,
+    MEDIUM,
+    LARGE
 };
 
 std::ostream& operator<<(std::ostream &, TrackType);
@@ -29,20 +30,23 @@ std::ostream& operator<<(std::ostream &, TrackSize);
 
 class Track
 {
- private:
+private:
     const int m_id;
     const TrackSize m_size;
     TrackType m_type;
     std::queue<std::shared_ptr<ARequest> > m_requests_queue;
     unsigned int m_time_when_free;
- public:
+
+    friend std::ostream& operator<<(std::ostream& ost, const Track &track);
+    friend QDebug operator<<(QDebug, const Track&);
+public:
     Track(int m_id, TrackSize m_size, TrackType m_type);
     TrackSize getSize() const;
     TrackType getType() const;
     int getId() const;
-    unsigned int getTimeWhenFree();
-    bool isFree();
-    bool isRequestAcceptable(const APlane &);
+    unsigned int getTimeWhenFree() const;
+    bool isFree() const;
+    bool isRequestAcceptable(const APlane &) const;
     void addRequest(std::shared_ptr<ARequest> &);
     bool isRequestProcessNow(std::shared_ptr<ARequest> &) const;
     void removeTopRequest();
@@ -51,9 +55,6 @@ class Track
     static TrackSize getSizeFromString(const std::string &);
     
     // Ionut: these friend declarations, can they be placed in private section, to not pollute public interface area? 
-    
-    friend std::ostream& operator<<(std::ostream& ost, const Track &track);
-    friend QDebug operator<<(QDebug, const Track&);
 };
 
 #endif  // INTERN_PROJECT_TRACK_H_

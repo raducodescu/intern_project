@@ -14,7 +14,7 @@ public:
 
 // Ionut: parameter names should not start with m_, only member names.
 
-    RegularPlane(unsigned int m_consumption, PlaneType m_type, PlaneSize m_size);
+    RegularPlane(unsigned int consumption, PlaneType type, PlaneSize size);
 
     // APlane interface
     void dump_plane() const override;

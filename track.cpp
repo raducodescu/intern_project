@@ -9,7 +9,7 @@ int Track::getId() const
 
 // Ionut: this function can be const
 
-unsigned int Track::getTimeWhenFree()
+unsigned int Track::getTimeWhenFree() const
 {
     if (m_requests_queue.size() == 0) {
         return GlobalTime::getInstance().getGlobalTime();
@@ -22,21 +22,21 @@ unsigned int Track::getTimeWhenFree()
 
 // Ionut: this function can be const
 
-bool Track::isFree()
+bool Track::isFree() const
 {
     return m_requests_queue.size() == 0;
 }
 
 // Ionut: can this function be const?
 
-bool Track::isRequestAcceptable(const APlane &plane)
+bool Track::isRequestAcceptable(const APlane &plane) const
 {
     switch (m_size)
     {
     case TrackSize::LARGE:
         if (plane.getType() == PlaneType::MILITARY)
             return true;
-        else if (m_type == TrackType::ALL)
+        else if (m_type == TrackType::PUBLIC)
             return true;
         else
             return false;
@@ -45,7 +45,7 @@ bool Track::isRequestAcceptable(const APlane &plane)
             return false;
         if (plane.getType() == PlaneType::MILITARY)
             return true;
-        else if (m_type == TrackType::ALL)
+        else if (m_type == TrackType::PUBLIC)
             return true;
         else
             return false;
@@ -54,7 +54,7 @@ bool Track::isRequestAcceptable(const APlane &plane)
             return false;
         if (plane.getType() == PlaneType::MILITARY)
             return true;
-        else if (m_type == TrackType::ALL)
+        else if (m_type == TrackType::PUBLIC)
             return true;
         else
             return false;
@@ -94,16 +94,15 @@ TrackType Track::getType() const
 
 TrackType Track::getTypeFromString(const std::string &string)
 {
-    if (string.compare("all") == 0)
-
+    if (string.compare("public") == 0)
     {
-        return TrackType::ALL;
+        return TrackType::PUBLIC;
     }
     else if (string.compare("private") == 0)
     {
         return TrackType::PRIVATE;
     }
-    throw std::invalid_argument("Type needs to be either all or private");
+    throw std::invalid_argument("Type needs to be either public or private");
 }
 
 TrackSize Track::getSizeFromString(const std::string &string)
@@ -145,8 +144,8 @@ std::ostream &operator<<(std::ostream &ost, TrackType type)
     std::string str;
     switch (type)
     {
-    case TrackType::ALL:
-        str = "ALL";
+    case TrackType::PUBLIC:
+        str = "PUBLIC";
         break;
     case TrackType::PRIVATE:
         str = "PRIVATE";

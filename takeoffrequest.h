@@ -9,7 +9,7 @@ class TakeOffRequest : public PlaneRequest
 
  public:
     TakeOffRequest(unsigned int creation_time, int m_id, APlane *m_plane,
-                   unsigned int m_request_time, bool m_urgent, RequestType type);
+                   unsigned int m_request_time, bool m_urgent, RequestType m_type);
     // ARequest interface
     
     // Ionut: what is the 'override' for? Please give the answer during the review meeting.

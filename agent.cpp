@@ -99,8 +99,7 @@ void Agent::threadMain()
             {
                 
                 // Ionut: is this unlock happening anyway on lock destructor? Otherwise the 'break' above at line 95 is missing unlock call.
-                
-                lock.unlock();
+                //lock.unlock();
                 break;
             }
             m_airport_requests->pop();
@@ -141,7 +140,7 @@ bool Agent::canProcessAnotherRequest()
 {
     // Ionut: should you check here also m_running ?
     
-    return m_agent_requests.size() < m_capacity;
+    return m_running && m_agent_requests.size() < m_capacity;
 }
 
 bool Agent::isWorking() {

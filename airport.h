@@ -11,13 +11,12 @@
 #include <string>
 #include <vector>
 #include "genericairport.h"
-
+#include "utils.h"
 // Ionut: why do you need to include so many headers here? Please reduce and use fwd declarations where suited instead.
 
 #include "agent.h"
 #include "planerequest.h"
 #include "track.h"
-#include "utils.h"
 #include "logobserver.h"
 
 class Airport : public GenericAirport
@@ -31,10 +30,9 @@ private:
     ObserverPList m_observers;
     std::atomic_bool m_stopped;
 
-    std::shared_ptr<ARequest> getBestRequest();
-    void initializeTracks(QJsonValue &);
-    void initializeAgents(QJsonValue &);
-    void initializeStaticData(QJsonValue &);
+    void initializeTracks(const QJsonValue &);
+    void initializeAgents(const QJsonValue &);
+    void initializeStaticData(const QJsonValue &);
     // AbstractAirport interface
 
 public:
@@ -45,7 +43,7 @@ public:
     void accept(const std::shared_ptr<ARequest> &request) override;
     void stop();
     void addObserver(std::shared_ptr<Observer>);
-    std::vector<std::shared_ptr<Agent> > getAgents() const;
+    const std::vector<std::shared_ptr<Agent>>& getAgents() const;
 
     friend std::ostream& operator<<(std::ostream&, const Airport &);
     friend QDebug operator<<(QDebug, const Airport &);

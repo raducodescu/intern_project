@@ -5,7 +5,9 @@
 
 // Ionut: you could just have a forward declaration for RequestConsumer, instead including its header.
 
-#include "requestconsumer.h"
+//#include "requestconsumer.h"
+class RequestConsumer;
+
 
 class RequestGenerator
 {

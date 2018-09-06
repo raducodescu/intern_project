@@ -3,7 +3,7 @@
 
 RequestType ARequest::getType() const
 {
-    return type;
+    return m_type;
 }
 
 RequestType ARequest::GetTypeFromString(const std::string &str)
@@ -21,21 +21,21 @@ RequestType ARequest::GetTypeFromString(const std::string &str)
 
 unsigned int ARequest::getProcessTime() const
 {
-    return processTime;
+    return m_processTime;
 }
 
 void ARequest::setProcessTime(unsigned int value)
 {
-    processTime = value;
+    m_processTime = value;
 }
 
-ARequest::ARequest(unsigned int creationTime, RequestType type) : creationTime(creationTime), type(type)
+ARequest::ARequest(unsigned int creationTime, RequestType type) : m_creationTime(creationTime), m_type(type)
 {
 }
 
 unsigned int ARequest::getCreationTime() const
 {
-    return creationTime;
+    return m_creationTime;
 }
 
 ARequest::~ARequest()

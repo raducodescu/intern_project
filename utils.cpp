@@ -10,6 +10,8 @@ std::shared_ptr<QJsonObject> readJson(const std::string &filename)
     file.setFileName(qfilename);
     
     // IONUT: error handling (if file does not exist)
+    if (!file.exists())
+        throw std::runtime_error("File does not exist");
     
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     value = file.readAll();
@@ -22,7 +24,12 @@ std::shared_ptr<QJsonObject> readJson(const std::string &filename)
 GlobalTime::GlobalTime()
 {
     m_future = std::async(std::launch::async,
-                        &GlobalTime::increment_function, this);
+                          &GlobalTime::increment_function, this);
+}
+
+GlobalTime::~GlobalTime()
+{
+
 }
 
 void GlobalTime::increment_function()
@@ -36,7 +43,6 @@ void GlobalTime::increment_function()
 
 unsigned int GlobalTime::getGlobalTime() const
 {
-    
     // IONUT: Can there be some synchronization issue between threads trying to read the time and thread that increments the time?
     
     return m_global_time;

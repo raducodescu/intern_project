@@ -19,16 +19,16 @@ class FileGenerator : public RequestGenerator
 {
 private:
     std::vector<std::shared_ptr<ARequest> > m_requests;
+    APlane *createPlaneFromQJsonObject(QJsonObject obj);
 public:
     FileGenerator();
 
-// Ionut: I would prefer to see parameters send by const& where possible.
+    // Ionut: I would prefer to see parameters send by const& where possible.
 
-    void generateRequests(std::string filename);
+    void generateRequests(const std::string &filename);
     
- // Ionut: function below needs to be public?
-    
-    APlane *createPlaneFromQJsonObject(QJsonObject obj);
+    // Ionut: function below needs to be public?
+
 };
 
 #endif  // INTERN_PROJECT_FILEGENERATOR_H_

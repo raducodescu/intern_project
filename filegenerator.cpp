@@ -34,9 +34,15 @@ APlane* FileGenerator::createPlaneFromQJsonObject(QJsonObject obj)
     return toCreate;
 }
 
-void FileGenerator::generateRequests(std::string filename)
+void FileGenerator::generateRequests(const std::string &filename)
 {
-    auto file_json = readJson(filename);
+    try {
+        auto file_json = readJson(filename);
+    } catch (std::exception &e) {
+        std::cout << "Exception when reading file: " << e.what() << std::endl;
+        return;
+    }
+
     QJsonValue requestsValue = file_json->value("requests");
 
     if (!requestsValue.isArray())
