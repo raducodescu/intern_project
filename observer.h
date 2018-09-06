@@ -2,6 +2,8 @@
 #define OBSERVER_H
 #include "action.h"
 
+// Ionut: The name of this class is too generic. Name it at least AObserver.
+
 class Observer
 {
 public:
