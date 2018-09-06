@@ -2,6 +2,9 @@
 #define INTERN_PROJECT_REQUESTGENERATOR_H_
 #include <vector>
 #include <qdebug.h>
+
+// Ionut: you could just have a forward declaration for RequestConsumer, instead including its header.
+
 #include "requestconsumer.h"
 
 class RequestGenerator
