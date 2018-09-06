@@ -1,4 +1,4 @@
-#include "./landingrequest.h"
+#include "landingrequest.h"
 
 unsigned int LandingRequest::getFuel() const
 {

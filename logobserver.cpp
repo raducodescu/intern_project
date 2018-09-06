@@ -12,7 +12,8 @@ void LogObserver::update(unsigned int time, std::shared_ptr<Action> action)
     m_ost << std::setfill('0') << std::setw(4) << time << ":\t";
     m_ost << action->getType() << " REQUEST---ID:" << action->getRequest()->getId();
 
-    switch (action->getType()) {
+    switch (action->getType())
+    {
     case ActionType::FAILED:
         m_ost << std::endl;
         m_failed_requests.push_back(action->getRequest());

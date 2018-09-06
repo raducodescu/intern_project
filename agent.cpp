@@ -2,7 +2,8 @@
 
 void Agent::notify(std::shared_ptr<Action> action)
 {
-    foreach (std::shared_ptr<Observer> observer, *m_observers){
+    foreach (std::shared_ptr<Observer> observer, *m_observers)
+    {
         observer->update(GlobalTime::getInstance().getGlobalTime(), action);
     }
 }
@@ -11,7 +12,8 @@ std::shared_ptr<Track> Agent::getBestTrack(std::shared_ptr<ARequest> req)
 {
     std::shared_ptr<Track> track_to_put = nullptr;
 
-    switch (req->getPlaneInfo().getSize()) {
+    switch (req->getPlaneInfo().getSize())
+    {
     case PlaneSize::SMALL:
         track_to_put = getBestTypeTrack(req, TrackSize::SMALL);
         if (track_to_put)
@@ -34,8 +36,10 @@ std::shared_ptr<Track> Agent::getBestTypeTrack(std::shared_ptr<ARequest> req, Tr
     unsigned int requestTime = req->getRequestTime();
 
     foreach (auto track, *m_tracks) {
-        if (track->getSize() == size && track->isRequestAcceptable(req->getPlaneInfo()) && track->getTimeWhenFree() >= requestTime && req->checkFuel(track->getTimeWhenFree())) {
-            if (track_to_put == nullptr) {
+        if (track->getSize() == size && track->isRequestAcceptable(req->getPlaneInfo()) &&
+                track->getTimeWhenFree() >= requestTime && req->checkFuel(track->getTimeWhenFree())) {
+            if (track_to_put == nullptr)
+            {
                 track_to_put = track;
             }
             else
@@ -46,7 +50,6 @@ std::shared_ptr<Track> Agent::getBestTypeTrack(std::shared_ptr<ARequest> req, Tr
     }
     return track_to_put;
 }
-
 
 void Agent::processLocalRequests(unsigned int actual_time)
 {
@@ -119,10 +122,6 @@ void Agent::threadMain()
 
 void Agent::destroyThread()
 {
-//    while(isWorking())
-//    {
-//    }
-
     if (m_thread->joinable())
     {
         m_thread->join();

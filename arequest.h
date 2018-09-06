@@ -10,7 +10,7 @@ enum class RequestType
     LANDING, TAKEOFF
 };
 
-class ARequest : public std::enable_shared_from_this<ARequest>
+class ARequest
 {
 private:
     const unsigned int creationTime;
@@ -20,10 +20,13 @@ public:
     ARequest(unsigned int creationTime, RequestType type);
     virtual ~ARequest();
 
+    static RequestType GetTypeFromString(const std::string&);
+
+    unsigned int getProcessTime() const;
+    void setProcessTime(unsigned int value);
     RequestType getType() const;
     unsigned int getCreationTime() const;
 
-    static RequestType GetTypeFromString(const std::string&);
     virtual int getId() const = 0;
     virtual APlane& getPlaneInfo() const = 0;
     virtual bool isUrgent() const = 0;
@@ -32,9 +35,6 @@ public:
 
     virtual void dump_request(std::ostream &ost) const = 0;
     friend std::ostream& operator<<(std::ostream &, const ARequest&);
-
-    unsigned int getProcessTime() const;
-    void setProcessTime(unsigned int value);
 };
 
 

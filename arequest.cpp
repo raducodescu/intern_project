@@ -1,5 +1,5 @@
-#include "./arequest.h"
 #include <string>
+#include "arequest.h"
 
 RequestType ARequest::getType() const
 {
@@ -11,7 +11,8 @@ RequestType ARequest::GetTypeFromString(const std::string &str)
     if (str.compare("in"))
     {
         return RequestType::LANDING;
-    } else if (str.compare("out"))
+    }
+    else if (str.compare("out"))
     {
             return RequestType::TAKEOFF;
     }

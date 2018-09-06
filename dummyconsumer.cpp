@@ -1,5 +1,5 @@
-#include "./dummyconsumer.h"
 #include <memory>
+#include "dummyconsumer.h"
 
 DummyConsumer::DummyConsumer()
 {

@@ -1,7 +1,7 @@
-#include "airport.h"
 #include <memory>
 #include <string>
 #include <vector>
+#include "airport.h"
 
 std::vector<std::shared_ptr<Agent> > Airport::getAgents() const
 {
@@ -147,7 +147,7 @@ void Airport::accept(const std::shared_ptr<ARequest> &request)
         break;
     }
     bool is_request_good = false;
-    foreach(auto track, m_tracks)
+    foreach (auto track, m_tracks)
     {
         is_request_good |= track->isRequestAcceptable(request->getPlaneInfo());
     }
@@ -168,7 +168,8 @@ void Airport::stop()
     while (m_requests.size() || wait)
     {
         wait = false;
-        foreach (auto agent, m_agents) {
+        foreach (auto agent, m_agents)
+        {
             wait |= agent->isWorking();
         }
 

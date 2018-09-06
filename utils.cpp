@@ -1,6 +1,6 @@
-#include "./utils.h"
 #include <memory>
 #include <string>
+#include "utils.h"
 
 std::shared_ptr<QJsonObject> readJson(const std::string &filename)
 {
@@ -24,7 +24,8 @@ GlobalTime::GlobalTime()
 
 void GlobalTime::increment_function()
 {
-    while (true) {
+    while (true)
+    {
         this->m_global_time++;
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }

@@ -1,4 +1,4 @@
-#include "./action.h"
+#include "action.h"
 
 unsigned int Action::getAgent_id() const
 {
@@ -22,7 +22,10 @@ std::shared_ptr<ARequest> Action::getRequest() const
 
 Action::Action(ActionType type, std::shared_ptr<ARequest> request,
                unsigned int agent_id, unsigned int track_id) : m_type(type),
-    m_request(request), m_agent_id(agent_id), m_track_id(track_id) {}
+    m_request(request), m_agent_id(agent_id), m_track_id(track_id)
+{
+
+}
 
 std::ostream &operator<<(std::ostream &ost, ActionType type)
 {

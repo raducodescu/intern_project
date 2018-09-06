@@ -16,8 +16,8 @@ private:
     ARequestPList m_successful_requests;
 public:
     LogObserver(const std::string& file);
+
     // Observer interface
-public:
     void update(unsigned int, std::shared_ptr<Action>) override;
     void getResults() override;
 };

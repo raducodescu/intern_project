@@ -1,4 +1,4 @@
-#include "./requestconsumer.h"
+#include "requestconsumer.h"
 
 RequestConsumer::RequestConsumer()
 {

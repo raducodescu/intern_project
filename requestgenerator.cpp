@@ -1,4 +1,4 @@
-#include "./requestgenerator.h"
+#include "requestgenerator.h"
 
 RequestGenerator::RequestGenerator()
 {

@@ -1,6 +1,6 @@
-#include "./filegenerator.h"
 #include <memory>
 #include <string>
+#include "filegenerator.h"
 
 FileGenerator::FileGenerator()
 {
@@ -40,7 +40,7 @@ void FileGenerator::generateRequests(std::string filename)
         throw std::invalid_argument("Requests needs to be an array");
 
     QJsonArray requestsArray = requestsValue.toArray();
-    foreach(const QJsonValue &value, requestsArray)
+    foreach (const QJsonValue &value, requestsArray)
     {
         QJsonObject obj = value.toObject();
         if (!obj.contains("id"))

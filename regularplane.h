@@ -12,6 +12,7 @@ private:
     unsigned int m_time_on_track;
 public:
     RegularPlane(unsigned int m_consumption, PlaneType m_type, PlaneSize m_size);
+
     // APlane interface
     void dump_plane() const override;
     unsigned int getConsumption() const override;

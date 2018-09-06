@@ -35,16 +35,17 @@ private:
     // AbstractAirport interface
 
 public:
+    explicit Airport(const std::string &configure_file);
+    ~Airport() override;
+
     void dump_airport(std::ostream&) const override;
     void accept(const std::shared_ptr<ARequest> &request) override;
     void stop();
     void addObserver(std::shared_ptr<Observer>);
+    std::vector<std::shared_ptr<Agent> > getAgents() const;
 
-    explicit Airport(const std::string &configure_file);
-    ~Airport() override;
     friend std::ostream& operator<<(std::ostream&, const Airport &);
     friend QDebug operator<<(QDebug, const Airport &);
-    std::vector<std::shared_ptr<Agent> > getAgents() const;
 };
 
 #endif  // INTERN_PROJECT_AIRPORT_H_

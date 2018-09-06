@@ -1,5 +1,5 @@
-#include "./aplane.h"
 #include <iostream>
+#include "aplane.h"
 
 APlane::APlane()
 {
@@ -37,7 +37,8 @@ PlaneType APlane::GetTypeFromString(const std::string &string)
     if (string.compare("military") == 0)
     {
         return PlaneType::MILITARY;
-    } else if (string.compare("commercial") == 0)
+    }
+    else if (string.compare("commercial") == 0)
     {
         return PlaneType::COMMERCIAL;
     }
