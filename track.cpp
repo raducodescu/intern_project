@@ -7,6 +7,8 @@ int Track::getId() const
     return m_id;
 }
 
+// Ionut: this function can be const
+
 unsigned int Track::getTimeWhenFree()
 {
     if (m_requests_queue.size() == 0) {
@@ -18,10 +20,14 @@ unsigned int Track::getTimeWhenFree()
     }
 }
 
+// Ionut: this function can be const
+
 bool Track::isFree()
 {
     return m_requests_queue.size() == 0;
 }
+
+// Ionut: can this function be const?
 
 bool Track::isRequestAcceptable(const APlane &plane)
 {
