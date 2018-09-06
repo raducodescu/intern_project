@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
 
     GlobalTime::getInstance();
 
+    // Ionut: where are you catching exceptions? I saw your code is throwing some.
+    
     std::ofstream ost("airport.log");
     std::shared_ptr<Observer> log_observer(new LogObserver(argv[3]));
     Airport a(argv[1]);
