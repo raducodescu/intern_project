@@ -11,6 +11,9 @@ APlane* FileGenerator::createPlaneFromQJsonObject(QJsonObject obj)
     APlane *toCreate;
     // Plane fields
     if (!obj.contains("consumption"))
+        
+  // Ionut: it will be nice in the review meeting you also show how your app handles an invalid input file.
+        
         throw std::invalid_argument("Fuel field is consumption");
     if (!obj.contains("type"))
         throw std::invalid_argument("Type field is invalid");
@@ -79,6 +82,9 @@ void FileGenerator::generateRequests(std::string filename)
         std::string direction = obj.value("type").toString().toStdString();
         RequestType requestType = ARequest::GetTypeFromString(direction);
         std::shared_ptr<ARequest> request;
+        
+        // Where is this plane object deallocated?
+        
         APlane *plane = createPlaneFromQJsonObject(obj);
         unsigned int creationTime = GlobalTime::getInstance().getGlobalTime();
         if (requestType == RequestType::TAKEOFF) {
