@@ -12,11 +12,15 @@
 
 enum class TrackType
 {
+    // Ionut: PUBLIC is better name than ALL
+    
     ALL, PRIVATE
 };
 
 enum class TrackSize
 {
+    // Ionut: looks better writing enum items on separate line
+    
     SMALL, MEDIUM, LARGE
 };
 
@@ -45,6 +49,9 @@ class Track
 
     static TrackType getTypeFromString(const std::string &);
     static TrackSize getSizeFromString(const std::string &);
+    
+    // Ionut: these friend declarations, can they be placed in private section, to not pollute public interface area? 
+    
     friend std::ostream& operator<<(std::ostream& ost, const Track &track);
     friend QDebug operator<<(QDebug, const Track&);
 };
