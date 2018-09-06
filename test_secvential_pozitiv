@@ -1,3 +1,5 @@
+// Ionut: It is better to give some extension to every file, to know what it represents, like .txt or .json for this one.
+
 {
 "requests": [
         {
