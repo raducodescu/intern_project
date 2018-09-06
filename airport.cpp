@@ -3,15 +3,21 @@
 #include <vector>
 #include "airport.h"
 
+// Ionut: Could these containers be returned by const& instead copy?
+
 std::vector<std::shared_ptr<Agent> > Airport::getAgents() const
 {
     return m_agents;
 }
 
+// Ionut: it below function used? does not seem implemented.
+
 std::shared_ptr<ARequest> Airport::getBestRequest()
 {
     return nullptr;
 }
+
+// Ionut: can parameter be const& ?
 
 void Airport::initializeTracks(QJsonValue& tracksValue)
 {
@@ -35,6 +41,8 @@ void Airport::initializeTracks(QJsonValue& tracksValue)
         m_tracks.push_back(std::make_shared<Track>(id, tsize, ttype));
     }
 }
+
+// Ionut: parameter const& ?
 
 void Airport::initializeAgents(QJsonValue& controlValue)
 {
@@ -120,6 +128,8 @@ Airport::Airport(const std::string &configure_file) : m_stopped(false)
     initializeAgents(agents_value);
     initializeStaticData(static_data_value);
 
+    // Ionut: starting of threads it would be better to be kept as explicit action outside of constructor.
+    
     foreach (auto a, m_agents)
     {
         a->startThread();
@@ -153,6 +163,7 @@ void Airport::accept(const std::shared_ptr<ARequest> &request)
     }
     if (!is_request_good)
     {
+        // Ionut: this should also go to notify observer and be catched by your negative tests.
         std::cout << "Request with id " << request->getId() << " can't be process in this airport" << std::endl;
         return;
     }
