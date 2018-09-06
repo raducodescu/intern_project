@@ -13,6 +13,9 @@ enum class RequestType
 class ARequest
 {
 private:
+    
+    // Ionut: m_* names
+    
     const unsigned int creationTime;
     unsigned int processTime;
     const RequestType type;
@@ -38,8 +41,13 @@ public:
 };
 
 
+// Ionut: please document this comparator and also explain the logic of comparison, it is key aspect of your algorithm.
+
 struct DereferenceCompareARequest : public std::binary_function<std::shared_ptr<ARequest>, std::shared_ptr<ARequest>, bool>
 {
+
+// Ionut: please keep implementations in .cpp files as much as possible.
+
     bool operator()(const std::shared_ptr<ARequest> req1,
                     const std::shared_ptr<ARequest> req2) const
     {
@@ -52,6 +60,8 @@ struct DereferenceCompareARequest : public std::binary_function<std::shared_ptr<
             return false;
         if (!req1->isUrgent() && req2->isUrgent())
             return true;
+
+// Ionut: can these two be const& ?
 
         APlane &p1 = req1->getPlaneInfo();
         APlane &p2 = req2->getPlaneInfo();
