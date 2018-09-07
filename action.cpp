@@ -43,6 +43,9 @@ std::ostream &operator<<(std::ostream &ost, ActionType type)
     case ActionType::RECEIVE:
         str = "RECEIVE";
         break;
+    case ActionType::UNSUPPORTED:
+        str = "UNSUPPORTED";
+        break;
     }
     ost << str;
     return ost;

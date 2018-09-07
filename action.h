@@ -5,7 +5,11 @@
 
 enum class ActionType
 {
-    LANDING, TAKEOFF, FAILED, RECEIVE
+    LANDING,
+    TAKEOFF,
+    FAILED,
+    RECEIVE,
+    UNSUPPORTED
 };
 
 std::ostream& operator<<(std::ostream &, ActionType);

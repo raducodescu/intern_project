@@ -1,5 +1,6 @@
-QT += quick
+QT -= gui
 CONFIG += c++14 -lpthread -lboost_system console
+CONFIG -= app_bundle
 
 QMAKE_CXXFLAGS += --std=c++14 -lpthread -lboost_system
 

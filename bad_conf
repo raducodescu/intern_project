@@ -1,0 +1,16 @@
+{
+        "static-data": {
+                "SMALLTIME": 3,
+                "MEDIUMTIME": 5,
+                "LARGETIME": 8
+        },
+        "tracks": [
+                { "id" : 2, "size": "medium", "type" : "public"},
+                { "id" : 3, "size": "small", "type" : "public"},
+                { "id" : 1, "size": "large", "type" : "public"},
+                { "id" : 4, "size": "large", "type" : "public"},
+                { "id" : 5, "size": "medium", "type" : "public"},
+                { "id" : 6, "size": "small", "type" : "public"}
+        ]
+
+}

@@ -36,12 +36,9 @@ APlane* FileGenerator::createPlaneFromQJsonObject(QJsonObject obj)
 
 void FileGenerator::generateRequests(const std::string &filename)
 {
-    try {
-        auto file_json = readJson(filename);
-    } catch (std::exception &e) {
-        std::cout << "Exception when reading file: " << e.what() << std::endl;
-        return;
-    }
+    std::shared_ptr<QJsonObject> file_json;
+
+    file_json = readJson(filename);
 
     QJsonValue requestsValue = file_json->value("requests");
 

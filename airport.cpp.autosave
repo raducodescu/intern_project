@@ -162,7 +162,7 @@ void Airport::accept(const std::shared_ptr<ARequest> &request)
     if (!is_request_good)
     {
         // Ionut: this should also go to notify observer and be catched by your negative tests.
-        std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::UNSUPPORTED, request, 0, 0);
+        //std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::UNSUPPORTED, request, 0, 0);
         return;
     }
     std::unique_lock<std::mutex> lock(m_requests_mutex);

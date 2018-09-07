@@ -59,7 +59,7 @@ struct DereferenceCompareARequest : public std::binary_function<std::shared_ptr<
 // Ionut: please keep implementations in .cpp files as much as possible.
 
     bool operator()(const std::shared_ptr<ARequest> req1,
-                    const std::shared_ptr<ARequest> req2) const
+                    const std::shared_ptr<ARequest> req2) const;
 
 };
 

@@ -14,6 +14,7 @@ void LogObserver::update(unsigned int time, std::shared_ptr<Action> action)
 
     switch (action->getType())
     {
+    case ActionType::UNSUPPORTED:
     case ActionType::FAILED:
         m_ost << std::endl;
         m_failed_requests.push_back(action->getRequest());
@@ -46,5 +47,6 @@ void LogObserver::getResults()
     average = static_cast<double>(all_times_sum / m_successful_requests.size());
     m_ost << "Average waiting time is " << average << std::endl;
     m_ost << "Minimum time in wait queue for a request is " << min_time << " and maximum time is " << max_time << std::endl;
-    m_ost << "Done";
+    std::ofstream err("err");
+    err << "Done";
 }

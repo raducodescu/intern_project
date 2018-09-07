@@ -33,17 +33,19 @@ private:
     void initializeTracks(const QJsonValue &);
     void initializeAgents(const QJsonValue &);
     void initializeStaticData(const QJsonValue &);
-    // AbstractAirport interface
+    void notify(std::shared_ptr<Action>);
 
 public:
     explicit Airport(const std::string &configure_file);
     ~Airport() override;
 
+    void startThreads();
     void dump_airport(std::ostream&) const override;
     void accept(const std::shared_ptr<ARequest> &request) override;
     void stop();
     void addObserver(std::shared_ptr<Observer>);
     const std::vector<std::shared_ptr<Agent>>& getAgents() const;
+
 
     friend std::ostream& operator<<(std::ostream&, const Airport &);
     friend QDebug operator<<(QDebug, const Airport &);
