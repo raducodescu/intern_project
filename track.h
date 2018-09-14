@@ -12,14 +12,12 @@
 
 enum class TrackType
 {
-    // Ionut: PUBLIC is better name than ALL
     PUBLIC,
     PRIVATE
 };
 
 enum class TrackSize
 {
-    // Ionut: looks better writing enum items on separate line
     SMALL,
     MEDIUM,
     LARGE
@@ -54,7 +52,6 @@ public:
     static TrackType getTypeFromString(const std::string &);
     static TrackSize getSizeFromString(const std::string &);
     
-    // Ionut: these friend declarations, can they be placed in private section, to not pollute public interface area? 
 };
 
 #endif  // INTERN_PROJECT_TRACK_H_

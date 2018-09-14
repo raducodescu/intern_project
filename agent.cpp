@@ -98,8 +98,6 @@ void Agent::threadMain()
             if (req->getRequestTime() > actual_time)
             {
                 
-                // Ionut: is this unlock happening anyway on lock destructor? Otherwise the 'break' above at line 95 is missing unlock call.
-                //lock.unlock();
                 break;
             }
             m_airport_requests->pop();
@@ -138,7 +136,6 @@ void Agent::stopThread()
 
 bool Agent::canProcessAnotherRequest()
 {
-    // Ionut: should you check here also m_running ?
     
     return m_running && m_agent_requests.size() < m_capacity;
 }

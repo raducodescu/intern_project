@@ -11,9 +11,6 @@ APlane* FileGenerator::createPlaneFromQJsonObject(QJsonObject obj)
     APlane *toCreate;
     // Plane fields
     if (!obj.contains("consumption"))
-        
-  // Ionut: it will be nice in the review meeting you also show how your app handles an invalid input file.
-        
         throw std::invalid_argument("Fuel field is consumption");
     if (!obj.contains("type"))
         throw std::invalid_argument("Type field is invalid");

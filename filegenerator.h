@@ -13,8 +13,6 @@
 #include "landingrequest.h"
 #include "airport.h"
 
-// Ionut: it is a good practice that almost every class has at least one line comment where declared, saying briefly what is about.
-
 class FileGenerator : public RequestGenerator
 {
 private:
@@ -23,11 +21,8 @@ private:
 public:
     FileGenerator();
 
-    // Ionut: I would prefer to see parameters send by const& where possible.
-
     void generateRequests(const std::string &filename);
     
-    // Ionut: function below needs to be public?
 
 };
 

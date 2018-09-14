@@ -20,7 +20,6 @@ int main(int argc, char *argv[])
 //        return -1;
 
     GlobalTime::getInstance();
-    // Ionut: where are you catching exceptions? I saw your code is throwing some.
     
     try {
         std::ofstream ost("airport.log");

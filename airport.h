@@ -12,7 +12,6 @@
 #include <vector>
 #include "genericairport.h"
 #include "utils.h"
-// Ionut: why do you need to include so many headers here? Please reduce and use fwd declarations where suited instead.
 
 #include "agent.h"
 #include "planerequest.h"

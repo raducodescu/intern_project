@@ -14,9 +14,6 @@ enum class RequestType
 class ARequest
 {
 private:
-    
-    // Ionut: m_* names
-    
     const unsigned int m_creationTime;
     unsigned int m_processTime;
     const RequestType m_type;
@@ -41,8 +38,6 @@ public:
     friend std::ostream& operator<<(std::ostream &, const ARequest&);
 };
 
-
-// Ionut: please document this comparator and also explain the logic of comparison, it is key aspect of your algorithm.
 /***
  *      Comparator folosit la sortarea requesturilor.
  *      Se sorteaza requesturile descrescator dupa timpul la care doresc sa aterizeze(RequestTime)
@@ -56,10 +51,8 @@ public:
 struct DereferenceCompareARequest : public std::binary_function<std::shared_ptr<ARequest>, std::shared_ptr<ARequest>, bool>
 {
 
-// Ionut: please keep implementations in .cpp files as much as possible.
-
     bool operator()(const std::shared_ptr<ARequest> req1,
-                    const std::shared_ptr<ARequest> req2) const
+                    const std::shared_ptr<ARequest> req2) const;
 
 };
 

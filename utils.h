@@ -35,10 +35,9 @@ private:
     GlobalTime();
     ~GlobalTime();
     GlobalTime(const GlobalTime &) = delete;
-    
+
     void increment_function();
-    // IONUT: Singleton needs to have declared private or deleted the contructors, destructors, copy and assignment.
-    
+
 public:
     unsigned int getGlobalTime() const;
     static GlobalTime& getInstance();

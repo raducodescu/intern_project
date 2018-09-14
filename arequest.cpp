@@ -61,8 +61,6 @@ bool DereferenceCompareARequest::operator()(const std::shared_ptr<ARequest> req1
         if (!req1->isUrgent() && req2->isUrgent())
             return true;
 
-// Ionut: can these two be const& ?
-
         const APlane &p1 = req1->getPlaneInfo();
         const APlane &p2 = req2->getPlaneInfo();
 

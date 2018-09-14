@@ -3,14 +3,12 @@
 #include <vector>
 #include "airport.h"
 
-// Ionut: Could these containers be returned by const& instead copy?
 
 const std::vector<std::shared_ptr<Agent>>& Airport::getAgents() const
 {
     return m_agents;
 }
 
-// Ionut: can parameter be const& ?
 
 void Airport::initializeTracks(const QJsonValue& tracksValue)
 {
@@ -35,7 +33,6 @@ void Airport::initializeTracks(const QJsonValue& tracksValue)
     }
 }
 
-// Ionut: parameter const& ?
 
 void Airport::initializeAgents(const QJsonValue& controlValue)
 {
@@ -131,7 +128,6 @@ Airport::Airport(const std::string &configure_file) : m_stopped(false)
     initializeAgents(agents_value);
     initializeStaticData(static_data_value);
 
-    // Ionut: starting of threads it would be better to be kept as explicit action outside of constructor.
     
 }
 
@@ -161,8 +157,6 @@ void Airport::accept(const std::shared_ptr<ARequest> &request)
     }
     if (!is_request_good)
     {
-        // Ionut: this should also go to notify observer and be catched by your negative tests.
-        std::shared_ptr<Action> action = std::make_shared<Action>(ActionType::UNSUPPORTED, request, 0, 0);
         return;
     }
     std::unique_lock<std::mutex> lock(m_requests_mutex);

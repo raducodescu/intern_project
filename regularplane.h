@@ -12,8 +12,6 @@ private:
     unsigned int m_time_on_track;
 public:
 
-// Ionut: parameter names should not start with m_, only member names.
-
     RegularPlane(unsigned int consumption, PlaneType type, PlaneSize size);
 
     // APlane interface
